@@ -33,6 +33,9 @@ framework:
     assets: ~
     php_errors:
         log: true
+    # nécessaie pour l'utilisation des outils de serialisation avec fosRestBundle
+    serializer:
+        enabled: true
 
 # Twig Configuration
 twig:

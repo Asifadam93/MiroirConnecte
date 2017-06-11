@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class UserController extends Controller
 {
     /**
-     * @Route(  "/{user_id}",
+     * @Route(  "/user/{user_id}",
      *     requirements={"user_id" = "\d+"},
      *     defaults={"user_id" = 0},
      *     name="get_user"))
@@ -56,7 +56,7 @@ class UserController extends Controller
                 ];
             }
         }
-        
+
         return new JsonResponse($retour);
         //return $this->render('MirrorApiBundle:User:index.html.twig', []);
     }
