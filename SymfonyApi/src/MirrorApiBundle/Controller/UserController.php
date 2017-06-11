@@ -2,62 +2,59 @@
 
 namespace MirrorApiBundle\Controller;
 
-use MirrorApiBundle\Entity\Time;
-use MirrorApiBundle\Entity\Weather;
+
+use MirrorApiBundle\Entity\User;
+use MirrorApiBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
 
 class UserController extends Controller
 {
+    use ControllerTrait;
+
     /**
-     * @Route(  "/user/{user_id}",
-     *     requirements={"user_id" = "\d+"},
-     *     defaults={"user_id" = 0},
-     *     name="get_user"))
-     * @return Response
+     * @Rest\View(serializerGroups={"user"})
+     * @Rest\Get("/user/{user_id}")
+     * @return JsonResponse
      */
-    public function getuserAction(Request $request)
+    public function getUserAction(Request $request)
     {
         $repository = $this->getDoctrine()->getRepository('MirrorApiBundle:User');
-        try {
-            $user = $repository->getUserAndModules($request->get("user_id"));
-        } catch(\Exception $exception) {
-            return new JsonResponse(["error" => "This user don't exist"], Response::HTTP_NOT_FOUND);
+
+        $user = $repository->getUserAndModules($request->get("user_id"));
+
+        if (empty($user)) {
+            $this->userNotFound();
         }
 
-        $retour = [
-            "first_name"    => $user->getFirstName(),
-            "last_name"     => $user->getLastName(),
-            "href"          => $this->generateUrl('get_user',[], UrlGeneratorInterface::ABSOLUTE_URL)
-        ];
+        //TODO ajouter les href
 
-        foreach ($user->getModules() as $module) {
-            if (is_a($module, Weather::class)) {
-                $retour["weather"][] = [
-                    "id"        => $module->getId(),
-                    "position"  => $module->getPosition(),
-                    "name"      => $module->getName(),
-                    "city"      => $module->getCity(),
-                    "country"   => $module->getCountry(),
-                    "href"      => "",
-                ];
-            }
-            if (is_a($module, Time::class)) {
-                $retour["time"][] = [
-                    "id"        => $module->getId(),
-                    "position"  => $module->getPosition(),
-                    "name"      => $module->getName(),
-                    "timezone"  => $module->getTimeZone(),
-                    "href"      => "",
-                ];
-            }
-        }
-
-        return new JsonResponse($retour);
+        return $user;
         //return $this->render('MirrorApiBundle:User:index.html.twig', []);
+    }
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_CREATED)
+     * @Rest\Post("/user")
+     * @return JsonResponse
+     */
+    public function postUserAction(Request $request) {
+        $user = new User();
+
+        $form = $this->createForm(UserType::class, $user);
+
+        $form->submit($request->request->all());
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            return $user;
+        } else {
+            return $form;
+        }
     }
 }

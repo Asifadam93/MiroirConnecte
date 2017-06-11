@@ -1,4 +1,11 @@
-mirror_api:
-    resource: "@MirrorApiBundle/Controller/"
-    type:     annotation
-    prefix:   /
+users:
+    type:     rest
+    resource: MirrorApiBundle\Controller\UserController
+
+weather_modules:
+    type:     rest
+    resource: MirrorApiBundle\Controller\Modules\WeatherController
+
+time_modules:
+    type:     rest
+    resource: MirrorApiBundle\Controller\Modules\TimeController
