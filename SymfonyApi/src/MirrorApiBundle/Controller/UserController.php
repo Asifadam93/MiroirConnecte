@@ -2,29 +2,32 @@
 
 namespace MirrorApiBundle\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use MirrorApiBundle\Entity\Time;
-use MirrorApiBundle\Entity\User;
 use MirrorApiBundle\Entity\Weather;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class UserController extends Controller
 {
     /**
-     * @Route("/", name="get_user"))
+     * @Route(  "/{user_id}",
+     *     requirements={"user_id" = "\d+"},
+     *     defaults={"user_id" = 0},
+     *     name="get_user"))
      * @return Response
      */
-    public function indexAction()
+    public function getuserAction(Request $request)
     {
         $repository = $this->getDoctrine()->getRepository('MirrorApiBundle:User');
-        /**
-         * @var $user User
-         */
-        $user = $repository->getUserAndModules(1);
+        try {
+            $user = $repository->getUserAndModules($request->get("user_id"));
+        } catch(\Exception $exception) {
+            return new JsonResponse(["error" => "This user don't exist"], Response::HTTP_NOT_FOUND);
+        }
 
         $retour = [
             "first_name"    => $user->getFirstName(),
@@ -53,10 +56,7 @@ class UserController extends Controller
                 ];
             }
         }
-
-
-        //dump($retour);
-
+        
         return new JsonResponse($retour);
         //return $this->render('MirrorApiBundle:User:index.html.twig', []);
     }

@@ -21,7 +21,7 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             ->from('MirrorApiBundle:User', 'u')
             ->leftJoin('u.modules', 'm')
             ->andWhere('u.id = :userId')
-            ->setParameter('userId', 1)
+            ->setParameter('userId', $userId)
             ->getQuery()
             ->getSingleResult();
     }
