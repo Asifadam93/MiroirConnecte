@@ -4,7 +4,6 @@ namespace MirrorApiBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * User
@@ -155,6 +154,7 @@ class User
     {
         $this->modules = $modules;
     }
+
 
 }
 

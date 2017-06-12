@@ -80,4 +80,36 @@ class TimeController extends Controller
             }
         }
     }
+
+    /**
+     * @Rest\View(serializerGroups={"module"})
+     * @Rest\Patch("/user/{user_id}/time/{module_id}")
+     * @return JsonResponse
+     */
+    public function patchTimeAction(Request $request)
+    {
+        $repository = $this->getDoctrine()->getRepository('MirrorApiBundle:Time');
+
+        $time = $repository->find($request->get("module_id"));
+
+        $form = $this->createForm(TimeType::class, $time);
+
+        if (empty($time)) {
+            return $this->moduleNotFound();
+        } else if ($request->get("user_id") != $time->getUser()->getId()) {
+            return $this->wrongOwner();
+        }
+
+        $this->convertRequestSnakeCaseToCamelCase($request);
+        $form->submit($request->request->all(), false);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($time);
+            $em->flush();
+            return $time;
+        } else {
+            return $form;
+        }
+    }
 }

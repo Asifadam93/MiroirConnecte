@@ -33,7 +33,6 @@ class UserController extends Controller
         //TODO ajouter les href
 
         return $user;
-        //return $this->render('MirrorApiBundle:User:index.html.twig', []);
     }
 
     /**
@@ -41,7 +40,10 @@ class UserController extends Controller
      * @Rest\Post("/user")
      * @return JsonResponse
      */
-    public function postUserAction(Request $request) {
+    public function postUserAction(Request $request)
+    {
+        $this->convertRequestSnakeCaseToCamelCase($request);
+
         $user = new User();
 
         $form = $this->createForm(UserType::class, $user);
@@ -57,4 +59,36 @@ class UserController extends Controller
             return $form;
         }
     }
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_CREATED)
+     * @Rest\Patch("/user/{user_id}")
+     * @return JsonResponse
+     */
+    public function patchUserAction(Request $request)
+    {
+        $this->convertRequestSnakeCaseToCamelCase($request);
+
+        $repository = $this->getDoctrine()->getRepository('MirrorApiBundle:User');
+
+        $user = $repository->getUserAndModules($request->get("user_id"));
+
+        $form = $this->createForm(UserType::class, $user);
+
+        if (empty($user)) {
+            $this->userNotFound();
+        }
+
+        $form->submit($request->request->all(), false);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            return $user;
+        } else {
+            return $form;
+        }
+    }
+
 }

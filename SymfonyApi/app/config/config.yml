@@ -77,6 +77,13 @@ swiftmailer:
     password: '%mailer_password%'
     spool: { type: memory }
 
+# JMS Serializer
+jms_serializer:
+    handlers:
+        datetime:
+            default_format: "Y-m-d\\TH:i:sP"
+            default_timezone: "UTC"
+
 # FOS REST
 fos_rest:
     routing_loader:

@@ -80,4 +80,37 @@ class WeatherController extends Controller
             }
         }
     }
+
+
+    /**
+     * @Rest\View(serializerGroups={"module"})
+     * @Rest\Patch("/user/{user_id}/weather/{module_id}")
+     * @return JsonResponse
+     */
+    public function patchWeatherAction(Request $request)
+    {
+        $repository = $this->getDoctrine()->getRepository('MirrorApiBundle:Weather');
+
+        $weather = $repository->find($request->get("module_id"));
+
+        $form = $this->createForm(WeatherType::class, $weather);
+
+        if (empty($weather)) {
+            return $this->moduleNotFound();
+        } else if ($request->get("user_id") != $weather->getUser()->getId()) {
+            return $this->wrongOwner();
+        }
+
+        $this->convertRequestSnakeCaseToCamelCase($request);
+        $form->submit($request->request->all(), false);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($weather);
+            $em->flush();
+            return $weather;
+        } else {
+            return $form;
+        }
+    }
 }
