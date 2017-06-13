@@ -1,12 +1,12 @@
 package com.example.asif.androidclient;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class LoginActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private Button buttonLogIn, buttonInscription;
     private EditText editTextNom, editTextMdp;
@@ -14,9 +14,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.login_layout);
 
-        buttonLogIn = (Button)findViewById(R.id.buttonLogin);
+        /*buttonLogIn = (Button)findViewById(R.id.buttonLogin);
         buttonInscription = (Button)findViewById(R.id.buttonInscription);
 
         editTextNom = (EditText)findViewById(R.id.editTextNom);
@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
             }
-        });
+        });*/
 
     }
 
