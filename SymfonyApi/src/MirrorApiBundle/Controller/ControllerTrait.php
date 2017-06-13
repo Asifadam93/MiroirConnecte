@@ -9,12 +9,12 @@ trait ControllerTrait
 {
     public function userNotFound()
     {
-        return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+        throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('User not found');
     }
 
     public function moduleNotFound()
     {
-        return new JsonResponse(['message' => 'Module not found'], Response::HTTP_NOT_FOUND);
+        throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException('Module not found');
     }
 
     public function wrongOwner()
@@ -29,7 +29,9 @@ trait ControllerTrait
         }
 
         foreach ($tempo as $oldKey=>$newKey) {
-            $request->request->set($newKey, $request->request->get($oldKey));
+            $tempo = $request->request->get($oldKey);
+            $request->request->remove($oldKey);
+            $request->request->set($newKey, $tempo);
         }
     }
 }

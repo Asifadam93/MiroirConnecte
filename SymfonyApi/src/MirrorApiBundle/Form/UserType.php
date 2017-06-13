@@ -3,6 +3,7 @@
 namespace MirrorApiBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,7 +17,9 @@ class UserType extends AbstractType
         $builder
             ->add('firstName')
             ->add('lastName')
-            ->add('photoName');
+            ->add('photoName')
+            ->add('plainPassword')
+            ->add('email', EmailType::class);
     }
     
     /**

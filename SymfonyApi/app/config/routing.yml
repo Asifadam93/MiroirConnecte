@@ -9,3 +9,8 @@ weather_modules:
 time_modules:
     type:     rest
     resource: MirrorApiBundle\Controller\Modules\TimeController
+
+auth-tokens:
+    type:     rest
+    resource: MirrorApiBundle\Controller\AuthTokenController
+

@@ -18,19 +18,18 @@ class UserController extends Controller
     /**
      * @Rest\View(serializerGroups={"user"})
      * @Rest\Get("/user/{user_id}")
+     * @param Request $request
      * @return JsonResponse
      */
     public function getUserAction(Request $request)
     {
         $repository = $this->getDoctrine()->getRepository('MirrorApiBundle:User');
 
-        $user = $repository->getUserAndModules($request->get("user_id"));
+        $user = $repository->find($request->get("user_id"));
 
         if (empty($user)) {
             $this->userNotFound();
         }
-
-        //TODO ajouter les href
 
         return $user;
     }
@@ -51,6 +50,11 @@ class UserController extends Controller
         $form->submit($request->request->all());
 
         if ($form->isValid()) {
+
+            if (!empty($user->getPlainPassword())) {
+                $this->encodePassword($user);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
@@ -71,7 +75,7 @@ class UserController extends Controller
 
         $repository = $this->getDoctrine()->getRepository('MirrorApiBundle:User');
 
-        $user = $repository->getUserAndModules($request->get("user_id"));
+        $user = $repository->find($request->get("user_id"));
 
         $form = $this->createForm(UserType::class, $user);
 
@@ -89,6 +93,35 @@ class UserController extends Controller
         } else {
             return $form;
         }
+    }
+
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
+     * @Rest\Delete("/user/{user_id}")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function removeUserAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('MirrorApiBundle:User')->find($request->get('user_id'));
+
+        if (empty($user)) {
+            return $this->moduleNotFound();
+        }
+
+        $em->remove($user);
+        $em->flush();
+    }
+
+
+    private function encodePassword($user)
+    {
+        $encoder = $this->get('security.password_encoder');
+        $encoded = $encoder->encodePassword($user, $user->getPlainPassword());
+        $user->setPassword($encoded);
     }
 
 }

@@ -84,14 +84,14 @@ class WeatherController extends Controller
 
     /**
      * @Rest\View(serializerGroups={"module"})
-     * @Rest\Patch("/user/{user_id}/weather/{module_id}")
+     * @Rest\Patch("/user/{user_id}/weather/{weather_module_id}")
      * @return JsonResponse
      */
     public function patchWeatherAction(Request $request)
     {
         $repository = $this->getDoctrine()->getRepository('MirrorApiBundle:Weather');
 
-        $weather = $repository->find($request->get("module_id"));
+        $weather = $repository->find($request->get("weather_module_id"));
 
         $form = $this->createForm(WeatherType::class, $weather);
 
@@ -113,4 +113,30 @@ class WeatherController extends Controller
             return $form;
         }
     }
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
+     * @Rest\Delete("/user/{user_id}/weather/{weather_module_id}")
+     */
+    public function removeWeatherAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('MirrorApiBundle:User')->find($request->get('user_id'));
+
+        $weatherModule = $this->getDoctrine()->getRepository('MirrorApiBundle:Weather')->findOneBy([
+            'id'    => $request->get('weather_module_id'),
+            'user'  => $user,
+        ]);
+
+        if (empty($weatherModule)) {
+            return $this->moduleNotFound();
+        }
+
+        /* @var $place Place */
+
+        $em->remove($weatherModule);
+        $em->flush();
+    }
+
 }

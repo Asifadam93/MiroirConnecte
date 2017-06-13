@@ -55,9 +55,6 @@ class TimeController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        /**
-         * @var $place User
-         */
         $user = $em->getRepository('MirrorApiBundle:User')->find($request->get('user_id'));
 
         if ($user === null) {
@@ -83,33 +80,59 @@ class TimeController extends Controller
 
     /**
      * @Rest\View(serializerGroups={"module"})
-     * @Rest\Patch("/user/{user_id}/time/{module_id}")
+     * @Rest\Patch("/user/{user_id}/time/{time_module_id}")
      * @return JsonResponse
      */
     public function patchTimeAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('MirrorApiBundle:User')->find($request->get('user_id'));
+
         $repository = $this->getDoctrine()->getRepository('MirrorApiBundle:Time');
 
-        $time = $repository->find($request->get("module_id"));
+        $timeModule = $repository->findOneBy([
+            'id'    => $request->get('time_module_id'),
+            'user'  => $user,
+        ]);
 
-        $form = $this->createForm(TimeType::class, $time);
-
-        if (empty($time)) {
-            return $this->moduleNotFound();
-        } else if ($request->get("user_id") != $time->getUser()->getId()) {
-            return $this->wrongOwner();
-        }
+        $form = $this->createForm(TimeType::class, $timeModule);
 
         $this->convertRequestSnakeCaseToCamelCase($request);
         $form->submit($request->request->all(), false);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($time);
+            $em->persist($timeModule);
             $em->flush();
-            return $time;
+            return $timeModule;
         } else {
             return $form;
         }
+    }
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
+     * @Rest\Delete("/user/{user_id}/time/{time_module_id}")
+     */
+    public function removeTimeAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $em->getRepository('MirrorApiBundle:User')->find($request->get('user_id'));
+
+        $timeModule = $this->getDoctrine()->getRepository('MirrorApiBundle:Time')->findOneBy([
+            'id'    => $request->get('time_module_id'),
+            'user'  => $user,
+        ]);
+
+        if (empty($timeModule)) {
+            return $this->moduleNotFound();
+        }
+
+        /* @var $place Place */
+
+        $em->remove($timeModule);
+        $em->flush();
     }
 }
