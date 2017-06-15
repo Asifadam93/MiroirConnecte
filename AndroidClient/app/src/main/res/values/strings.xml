@@ -24,4 +24,7 @@
     <string name="inscription">Inscription</string>
     <string name="prenom">Prenom</string>
     <string name="code_photo">Code photo</string>
+    <string name="confirmation_mot_de_passe">Confirmation mot de passe</string>
+    <string name="d_j_inscrit_connectez_vous">Déjà inscrit, connectez-vous</string>
+    <string name="champ_vide">Champ vide</string>
 </resources>
