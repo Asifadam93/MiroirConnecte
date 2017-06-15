@@ -20,8 +20,8 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:srcCompat="@drawable/tuto"
-        android:layout_weight="0.74" />
+        app:srcCompat="@drawable/tutorial"
+        android:layout_weight="0.82" />
 
     <EditText
         android:id="@+id/inscription_nom"

@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 public class LoginFragment extends Fragment {
 
-    private static EditText editTextUserName,editTextPassword;
+    private static EditText editTextUserName, editTextPassword;
     private static Button buttonLogin;
     private static TextView textViewRegister;
 
@@ -30,13 +30,13 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.login_layout,container,false);
+        view = inflater.inflate(R.layout.login_layout, container, false);
         initViews();
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                fragmentManager.beginTransaction().replace(R.id.frameContainer, new RegisterFragment(), "RegisterFragment").commit();
             }
         });
 
@@ -47,7 +47,7 @@ public class LoginFragment extends Fragment {
                 String name = editTextUserName.getText().toString();
                 String password = editTextPassword.getText().toString();
 
-                if(name.length() == 0){
+                /*if(name.length() == 0){
                     editTextUserName.setError(getString(R.string.champ_vide));
                     return;
                 }
@@ -55,23 +55,24 @@ public class LoginFragment extends Fragment {
                 if(password.length() == 0){
                     editTextPassword.setError(getString(R.string.champ_vide));
                     return;
-                }
+                }*/
 
+                fragmentManager.beginTransaction().replace(R.id.frameContainer, new RegisterFragment(), "RegisterFragment").commit();
             }
         });
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 
-    private void initViews(){
+    private void initViews() {
 
         fragmentManager = getActivity().getFragmentManager();
 
-        editTextUserName = (EditText)view.findViewById(R.id.login_nom);
-        editTextPassword = (EditText)view.findViewById(R.id.login_mdp);
-        buttonLogin = (Button)view.findViewById(R.id.login_button);
-        textViewRegister = (TextView)view.findViewById(R.id.login_inscription);
-        loginLayout = (LinearLayout)view.findViewById(R.id.login_layout);
+        editTextUserName = (EditText) view.findViewById(R.id.login_nom);
+        editTextPassword = (EditText) view.findViewById(R.id.login_mdp);
+        buttonLogin = (Button) view.findViewById(R.id.login_button);
+        textViewRegister = (TextView) view.findViewById(R.id.login_inscription);
+        loginLayout = (LinearLayout) view.findViewById(R.id.login_layout);
 
         // TODO: 14/06/2017  Setting text selector over textviews
     }
