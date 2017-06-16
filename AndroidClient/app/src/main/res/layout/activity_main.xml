@@ -11,14 +11,26 @@
         android:layout_height="wrap_content"
         android:background="@color/background_color">
 
+        <!--ImageButton
+            android:id="@+id/close_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="top|end"
+            android:paddingTop="40dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="20dp"
+            android:contentDescription="@string/fermer"
+            android:src="@drawable/icons_delete_30"
+            android:background="@android:color/transparent" /-->
+
         <FrameLayout
             android:id="@+id/frameContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true">
+            android:layout_alignParentStart="true">
         </FrameLayout>
-        
+
     </RelativeLayout>
 
 </ScrollView>

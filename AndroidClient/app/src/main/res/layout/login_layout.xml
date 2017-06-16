@@ -60,11 +60,11 @@
             android:id="@+id/login_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/button_selector"
             android:padding="3dp"
             android:text="@string/connexion"
-            android:textColor="#009688"
+            android:textColor="@color/background_color"
             android:textSize="17sp"
             android:textStyle="bold" />
 

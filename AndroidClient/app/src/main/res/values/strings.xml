@@ -7,8 +7,8 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_invalid_password">This photoName is too short</string>
+    <string name="error_incorrect_password">This photoName is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -27,4 +27,5 @@
     <string name="confirmation_mot_de_passe">Confirmation mot de passe</string>
     <string name="d_j_inscrit_connectez_vous">Déjà inscrit, connectez-vous</string>
     <string name="champ_vide">Champ vide</string>
+    <string name="fermer">Fermer</string>
 </resources>
