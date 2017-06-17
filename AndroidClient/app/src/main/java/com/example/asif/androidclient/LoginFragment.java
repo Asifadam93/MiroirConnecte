@@ -136,7 +136,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void launchUserActivity() {
-
+        Toast.makeText(getActivity(), R.string.conn_ok, Toast.LENGTH_SHORT).show();
     }
 
 }

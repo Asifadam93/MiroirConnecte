@@ -6,10 +6,11 @@ import com.google.gson.annotations.SerializedName;
  * Created by Asif on 09/06/2017.
  */
 
-public class UserResponse {
+public class User {
 
-    @SerializedName("id")
-    private int id;
+    private Integer id;
+    /*@SerializedName("message")
+    private String errorMsg;*/
     @SerializedName("first_name")
     private String firstName;
     @SerializedName("last_name")
@@ -18,51 +19,35 @@ public class UserResponse {
     private String email;
     @SerializedName("photo_name")
     private String photoName;
+    @SerializedName("plain_password")
+    private String password;
+
+    public User(String firstName, String lastName, String email, String password, String photoName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.photoName = photoName;
+    }
 
     public int getId() {
         return id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
+    /*public String getErrorMsg() {
+        return errorMsg;
+    }*/
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhotoName() {
-        return photoName;
-    }
-
-    public void setPhotoName(String photoName) {
-        this.photoName = photoName;
-    }
 
     @Override
     public String toString() {
-        return "UserResponse{" +
-                "id=" + id +
+        return "User{" +
+                /*"id=" + id +*/
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", photoName='" + photoName + '\'' +
+                ", password='" + password + '\'' +
                 '}';
     }
 }

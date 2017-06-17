@@ -2,8 +2,6 @@ package com.example.asif.androidclient.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 /**
  * Created by Asifadam93 on 16/06/2017.
  */
@@ -17,7 +15,7 @@ public class TokenResponse {
     @SerializedName("created_at")
     private String createdTime;
     @SerializedName("user")
-    UserResponse userList;
+    private User userList;
 
     public int getId() {
         return id;
@@ -31,7 +29,7 @@ public class TokenResponse {
         return createdTime;
     }
 
-    public UserResponse getUserList() {
+    public User getUserList() {
         return userList;
     }
 
