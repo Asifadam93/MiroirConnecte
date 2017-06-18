@@ -1,4 +1,4 @@
-package com.example.asif.androidclient;
+package com.example.asif.androidclient.Fragments;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -14,8 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.asif.androidclient.Api.UserClient;
+import com.example.asif.androidclient.Const;
 import com.example.asif.androidclient.Model.TokenRequest;
 import com.example.asif.androidclient.Model.TokenResponse;
+import com.example.asif.androidclient.Model.User;
+import com.example.asif.androidclient.R;
 
 import java.net.HttpURLConnection;
 
@@ -33,13 +36,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginFragment extends Fragment {
 
+    private static FragmentManager fragmentManager;
     private EditText editTextEmail, editTextPassword;
     private Button buttonLogin;
     private TextView textViewRegister;
-
     private View view;
-    private static FragmentManager fragmentManager;
     private LinearLayout loginLayout;
+    public static TokenResponse tokenResponse; // used in UserFragment
 
     @Nullable
     @Override
@@ -69,7 +72,7 @@ public class LoginFragment extends Fragment {
 
         fragmentManager = getActivity().getFragmentManager();
 
-        editTextEmail = (EditText) view.findViewById(R.id.login_nom);
+        editTextEmail = (EditText) view.findViewById(R.id.login_email);
         editTextPassword = (EditText) view.findViewById(R.id.login_mdp);
         buttonLogin = (Button) view.findViewById(R.id.login_button);
         textViewRegister = (TextView) view.findViewById(R.id.login_inscription);
@@ -103,7 +106,7 @@ public class LoginFragment extends Fragment {
 
         UserClient userClient = retrofitBuilder.create(UserClient.class);
 
-        Call<TokenResponse> userCall = userClient.loginUser(user);
+        final Call<TokenResponse> userCall = userClient.loginUser(user);
 
         userCall.enqueue(new Callback<TokenResponse>() {
             @Override
@@ -114,7 +117,10 @@ public class LoginFragment extends Fragment {
                 switch (responseCode) {
 
                     case HttpsURLConnection.HTTP_CREATED:
-                        Const.token = response.body().getToken(); // store received token for future use
+
+                        tokenResponse = response.body();
+
+                        //Const.token = response.body().getToken(); // store received token for future use
                         launchUserActivity();
                         break;
 
@@ -136,7 +142,12 @@ public class LoginFragment extends Fragment {
     }
 
     private void launchUserActivity() {
-        Toast.makeText(getActivity(), R.string.conn_ok, Toast.LENGTH_SHORT).show();
-    }
 
+        Toast.makeText(getActivity(), R.string.conn_ok, Toast.LENGTH_SHORT).show();
+
+        getActivity().getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frameContainer, new UserFragment(), "UserFragment")
+                .commit();
+    }
 }

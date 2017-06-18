@@ -1,4 +1,4 @@
-package com.example.asif.androidclient;
+package com.example.asif.androidclient.Fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -7,26 +7,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.asif.androidclient.Api.UserClient;
-import com.example.asif.androidclient.Model.TokenRequest;
-import com.example.asif.androidclient.Model.TokenResponse;
+import com.example.asif.androidclient.Const;
 import com.example.asif.androidclient.Model.User;
+import com.example.asif.androidclient.R;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
 
 /**
  * Created by AAD on 15/06/2017.
@@ -64,7 +61,7 @@ public class RegisterFragment extends Fragment {
         return view;
     }
 
-    private void showLoginFragment(){
+    private void showLoginFragment() {
         getActivity().getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frameContainer, new LoginFragment(), "LoginFragment")
@@ -154,13 +151,13 @@ public class RegisterFragment extends Fragment {
                 if (!response.isSuccessful()) {
                     // print response body if unsuccessful
                     try {
-                        Log.i("registerFrag",response.errorBody().string());
-                        Toast.makeText(getActivity(),"Error : "+response.code(),Toast.LENGTH_LONG).show();
+                        Log.i("registerFrag", response.errorBody().string());
+                        Toast.makeText(getActivity(), "Error : " + response.code(), Toast.LENGTH_LONG).show();
                     } catch (IOException e) {
                         // do nothing
                     }
                 } else {
-                    Toast.makeText(getActivity(), R.string.inscription_ok,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.inscription_ok, Toast.LENGTH_SHORT).show();
                     showLoginFragment();
                 }
 

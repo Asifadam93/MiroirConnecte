@@ -1,15 +1,20 @@
 package com.example.asif.androidclient.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 /**
  * Created by Asifadam93 on 16/06/2017.
  */
 
-public class TokenResponse {
+public class TokenResponse implements Serializable {
 
     @SerializedName("id")
-    private int id;
+    private Integer id;
     @SerializedName("value")
     private String token;
     @SerializedName("created_at")
