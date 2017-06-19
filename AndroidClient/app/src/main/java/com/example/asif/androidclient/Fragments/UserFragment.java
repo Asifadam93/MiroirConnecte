@@ -1,29 +1,21 @@
 package com.example.asif.androidclient.Fragments;
 
 import android.app.Fragment;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
-import com.example.asif.androidclient.Api.UserClient;
 import com.example.asif.androidclient.Const;
 import com.example.asif.androidclient.Model.TokenResponse;
+import com.example.asif.androidclient.Model.User;
 import com.example.asif.androidclient.R;
 import com.squareup.picasso.Picasso;
 
-import java.net.URI;
-
 import de.hdodenhof.circleimageview.CircleImageView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by Asifadam93 on 18/06/2017.
@@ -32,8 +24,11 @@ import retrofit2.Retrofit;
 public class UserFragment extends Fragment {
 
     private View view;
+    private TextView textViewUserMsg;
     private TokenResponse tokenResponse;
+    private User user;
     private CircleImageView circleImageView;
+    private Button buttonModule, buttonEditProfile, buttonDeleteProfile;
 
     @Nullable
     @Override
@@ -42,46 +37,63 @@ public class UserFragment extends Fragment {
         view = inflater.inflate(R.layout.user_layout, container, false);
 
         tokenResponse = LoginFragment.tokenResponse; // get user details
+        user = tokenResponse.getUser();
 
         initViews();
 
-        setProfileImage(tokenResponse.getUserList().getPhotoName());
+        setOnClickListeners();
+
+        setUserInfo();
 
         return view;
     }
 
     private void initViews(){
+        textViewUserMsg = (TextView)view.findViewById(R.id.user_name_text);
         circleImageView = (CircleImageView)view.findViewById(R.id.profile_image);
+        buttonModule = (Button)view.findViewById(R.id.user_edit_module);
+        buttonEditProfile = (Button)view.findViewById(R.id.user_edit_profil);
+        buttonDeleteProfile = (Button)view.findViewById(R.id.user_delete_profil);
+    }
+
+    private void setUserInfo(){
+
+        // set profile image
+        setProfileImage(user.getPhotoName());
+
+        // set welcome msg
+        String msg = String.format(getString(R.string.welcome_msg),user.getFirstName());
+        textViewUserMsg.setText(msg);
     }
 
     private void setProfileImage(String imgName){
+        String imageDownloadLink = Const.endPoint+"/img/photos/"+imgName;
+        Picasso.with(getActivity()).load(imageDownloadLink).into(circleImageView); //set profile image
+    }
 
-        Picasso.with(getActivity()).load("http://i.imgur.com/DvpvklR.png").into(circleImageView);
+    private void setOnClickListeners(){
 
-        /*Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Const.endPoint)
-                .build();
-
-        UserClient userClient = retrofit.create(UserClient.class);
-        Call<Bitmap> imgBitmap = userClient.getProfileImage(imgName);
-
-        imgBitmap.enqueue(new Callback<Bitmap>() {
+        buttonModule.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<Bitmap> call, Response<Bitmap> response) {
-
-                Log.i("UserFragment",""+response.code());
+            public void onClick(View view) {
 
             }
+        });
 
+        buttonEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFailure(Call<Bitmap> call, Throwable t) {
+            public void onClick(View view) {
 
             }
-        });*/
+        });
 
+        buttonDeleteProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-        //circleImageView.setImageDrawable(getResources().getDrawable(R.drawable.tutorial));
-       // circleImageView.setImageURI(Uri.parse("http://vps220964.ovh.net/img/photos/220615175608.jpeg"));
+            }
+        });
+
     }
 
 }

@@ -16,7 +16,7 @@
             android:id="@+id/profile_image"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:src="@drawable/fabien"
+            android:src="@drawable/error"
             app:civ_border_color="@color/white_greyish"
             app:civ_border_width="2dp" />
 
@@ -27,7 +27,6 @@
             android:layout_marginTop="15dp"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Salut Fabien !"
             android:textAppearance="@android:style/TextAppearance.Material.Headline"
             android:textSize="30sp" />
 

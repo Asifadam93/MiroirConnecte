@@ -34,7 +34,7 @@ public class TokenResponse implements Serializable {
         return createdTime;
     }
 
-    public User getUserList() {
+    public User getUser() {
         return userList;
     }
 
