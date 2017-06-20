@@ -48,30 +48,33 @@ public class UserFragment extends Fragment {
         return view;
     }
 
-    private void initViews(){
-        textViewUserMsg = (TextView)view.findViewById(R.id.user_name_text);
-        circleImageView = (CircleImageView)view.findViewById(R.id.profile_image);
-        buttonModule = (Button)view.findViewById(R.id.user_edit_module);
-        buttonEditProfile = (Button)view.findViewById(R.id.user_edit_profil);
-        buttonDeleteProfile = (Button)view.findViewById(R.id.user_delete_profil);
+    private void initViews() {
+        textViewUserMsg = (TextView) view.findViewById(R.id.user_name_text);
+        circleImageView = (CircleImageView) view.findViewById(R.id.profile_image);
+        buttonModule = (Button) view.findViewById(R.id.user_edit_module);
+        buttonEditProfile = (Button) view.findViewById(R.id.user_edit_profil);
+        buttonDeleteProfile = (Button) view.findViewById(R.id.user_delete_profil);
     }
 
-    private void setUserInfo(){
+    private void setUserInfo() {
 
         // set profile image
         setProfileImage(user.getPhotoName());
 
         // set welcome msg
-        String msg = String.format(getString(R.string.welcome_msg),user.getFirstName());
+        String msg = String.format(getString(R.string.welcome_msg), user.getFirstName());
         textViewUserMsg.setText(msg);
     }
 
-    private void setProfileImage(String imgName){
-        String imageDownloadLink = Const.endPoint+"/img/photos/"+imgName;
-        Picasso.with(getActivity()).load(imageDownloadLink).into(circleImageView); //set profile image
+    private void setProfileImage(String imgName) {
+        String imageDownloadLink = Const.endPoint + "/img/photos/" + imgName;
+        Picasso.with(getActivity())
+                .load(imageDownloadLink) // download image
+                .error(R.drawable.error) // set onError image
+                .into(circleImageView); //set profile image to circular view
     }
 
-    private void setOnClickListeners(){
+    private void setOnClickListeners() {
 
         buttonModule.setOnClickListener(new View.OnClickListener() {
             @Override
