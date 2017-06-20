@@ -1,17 +1,19 @@
 package com.example.asif.androidclient.Api;
 
-import android.graphics.Bitmap;
-
 import com.example.asif.androidclient.Model.TokenRequest;
 import com.example.asif.androidclient.Model.TokenResponse;
 import com.example.asif.androidclient.Model.User;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
+import retrofit2.http.DELETE;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
+
 
 /**
  * Created by Asifadam93 on 16/06/2017.
@@ -29,7 +31,9 @@ public interface UserClient {
     @POST("user")
     Call<User> registerUser(@Body User user);
 
-    @GET("img/photos/{name}")
-    Call<Bitmap> getProfileImage(@Path("name") String imageName);
-
+    @DELETE("user/{id}")
+    Call<Void> deleteUser(
+            @Header("X-Auth-Token") String userToken,
+            @Path("id") int id
+    );
 }
