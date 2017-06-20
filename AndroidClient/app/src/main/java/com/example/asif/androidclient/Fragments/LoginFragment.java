@@ -36,7 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginFragment extends Fragment {
 
-    private static FragmentManager fragmentManager;
+    private static FragmentManager fragmentManager; // TODO: 20/06/2017 use parcelable instead
     private EditText editTextEmail, editTextPassword;
     private Button buttonLogin;
     private TextView textViewRegister;
