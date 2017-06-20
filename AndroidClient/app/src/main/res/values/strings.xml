@@ -33,4 +33,6 @@
     <string name="inscription_ok">Inscription terminée, vous pouvez connecté</string>
     <string name="modules">Modules</string>
     <string name="welcome_msg">Salut %1$s !</string>
+    <string name="confirm_delete">Voulez-vous vraiement supprimer ?</string>
+    <string name="delete">Supprimer</string>
 </resources>
