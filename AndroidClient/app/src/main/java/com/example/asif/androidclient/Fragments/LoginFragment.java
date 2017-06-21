@@ -21,9 +21,12 @@ import com.example.asif.androidclient.Model.User;
 import com.example.asif.androidclient.R;
 
 import java.net.HttpURLConnection;
+import java.util.logging.Level;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -99,9 +102,16 @@ public class LoginFragment extends Fragment {
         //create user object
         TokenRequest user = new TokenRequest(email, password);
 
+        //okHttp client
+        OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        okHttpClient.addInterceptor(loggingInterceptor);
+
         Retrofit retrofitBuilder = new Retrofit.Builder()
                 .baseUrl(Const.endPoint)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient.build())
                 .build();
 
         UserClient userClient = retrofitBuilder.create(UserClient.class);
