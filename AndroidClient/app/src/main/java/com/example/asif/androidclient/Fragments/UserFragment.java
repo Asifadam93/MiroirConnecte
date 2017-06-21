@@ -96,7 +96,7 @@ public class UserFragment extends Fragment {
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showUpdateFragment();
             }
         });
 
@@ -153,7 +153,7 @@ public class UserFragment extends Fragment {
                     }
                 } else {
                     Toast.makeText(getActivity(), "Deleted", Toast.LENGTH_SHORT).show();
-                    //showLoginFragment();
+                    showLoginFragment();
                 }
 
             }
@@ -163,6 +163,19 @@ public class UserFragment extends Fragment {
                 Log.i("userFrag",""+t.getMessage());
             }
         });
+    }
 
+    private void showLoginFragment() {
+        getActivity().getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frameContainer, new LoginFragment(), "LoginFragment")
+                .commit();
+    }
+
+    private void showUpdateFragment() {
+        getActivity().getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frameContainer, new UpdateFragment(), "UpdateFragment")
+                .commit();
     }
 }

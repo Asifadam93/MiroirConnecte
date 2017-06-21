@@ -1,11 +1,6 @@
 package com.example.asif.androidclient.Model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
 
 /**
  * Created by Asif on 09/06/2017.
@@ -33,6 +28,13 @@ public class User {
         this.photoName = photoName;
     }
 
+    public User(String firstName, String lastName, String email, String photoName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.photoName = photoName;
+    }
+
     public int getId() {
         return id;
     }
@@ -55,6 +57,22 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPhotoName(String photoName) {
+        this.photoName = photoName;
     }
 
     @Override

@@ -31,8 +31,10 @@
     <string name="conn_ok">Connexion réussi</string>
     <string name="diff_mdp">Les mots de passe ne correspondent pas</string>
     <string name="inscription_ok">Inscription terminée, vous pouvez connecté</string>
+    <string name="update_ok">Mise à jour réussi</string>
     <string name="modules">Modules</string>
     <string name="welcome_msg">Salut %1$s !</string>
     <string name="confirm_delete">Voulez-vous vraiement supprimer ?</string>
     <string name="delete">Supprimer</string>
+    <string name="mettre_jour">Mettre à jour</string>
 </resources>
