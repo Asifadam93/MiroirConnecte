@@ -37,4 +37,5 @@
     <string name="confirm_delete">Voulez-vous vraiement supprimer ?</string>
     <string name="delete">Supprimer</string>
     <string name="mettre_jour">Mettre à jour</string>
+    <string name="ajouter_des_modules">Ajouter des modules</string>
 </resources>

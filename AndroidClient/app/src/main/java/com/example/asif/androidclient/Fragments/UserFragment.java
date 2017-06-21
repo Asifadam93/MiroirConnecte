@@ -13,12 +13,14 @@ import android.widget.Toast;
 
 import com.example.asif.androidclient.Api.UserClient;
 import com.example.asif.androidclient.Const;
+import com.example.asif.androidclient.Model.Modules;
 import com.example.asif.androidclient.Model.TokenResponse;
 import com.example.asif.androidclient.Model.User;
 import com.example.asif.androidclient.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -51,6 +53,14 @@ public class UserFragment extends Fragment {
 
         Log.i("userFrag","User id : "+user.getId());
         Log.i("userFrag","User token : "+tokenResponse.getToken());
+
+        Modules[] modules = user.getModules();
+
+        if(modules.length>0){
+            Log.i("userFrag","Module list ok");
+        } else {
+            Log.i("userFrag","Module list empty");
+        }
 
         initViews();
 

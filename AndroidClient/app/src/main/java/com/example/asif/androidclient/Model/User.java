@@ -2,6 +2,8 @@ package com.example.asif.androidclient.Model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by Asif on 09/06/2017.
  */
@@ -19,6 +21,8 @@ public class User {
     private String photoName;
     @SerializedName("plain_password")
     private String password;
+    @SerializedName("modules")
+    private Modules[] modules;
 
     public User(String firstName, String lastName, String email, String password, String photoName) {
         this.firstName = firstName;
@@ -57,6 +61,10 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public Modules[] getModules() {
+        return modules;
     }
 
     public void setFirstName(String firstName) {
