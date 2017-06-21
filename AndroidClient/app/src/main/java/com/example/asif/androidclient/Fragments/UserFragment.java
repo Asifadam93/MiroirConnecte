@@ -54,13 +54,13 @@ public class UserFragment extends Fragment {
         Log.i("userFrag","User id : "+user.getId());
         Log.i("userFrag","User token : "+tokenResponse.getToken());
 
-        Modules[] modules = user.getModules();
+        /*Modules[] modules = user.getModules();
 
         if(modules.length>0){
             Log.i("userFrag","Module list ok");
         } else {
             Log.i("userFrag","Module list empty");
-        }
+        }*/
 
         initViews();
 
