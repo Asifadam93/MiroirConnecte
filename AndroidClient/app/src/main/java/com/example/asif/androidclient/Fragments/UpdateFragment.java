@@ -18,6 +18,7 @@ import com.example.asif.androidclient.Model.User;
 import com.example.asif.androidclient.R;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +51,6 @@ public class UpdateFragment extends Fragment {
         initView();
         setUserValues();
 
-
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,7 +76,7 @@ public class UpdateFragment extends Fragment {
         buttonUpdate = (Button) view.findViewById(R.id.update_button);
     }
 
-    private void setUserValues(){
+    private void setUserValues() {
         editTextNom.setText(user.getLastName());
         editTextPrenom.setText(user.getFirstName());
         editTextEmail.setText(user.getEmail());
@@ -112,15 +112,16 @@ public class UpdateFragment extends Fragment {
             return;
         }
 
-        user.setFirstName(prenom);
-        user.setLastName(nom);
-        user.setEmail(email);
-        user.setPhotoName(photoCode);
+        HashMap<String, String> updateMap = new HashMap<>();
+        updateMap.put("first_name", prenom);
+        updateMap.put("last_name", nom);
+        updateMap.put("email", email);
+        updateMap.put("photo_name", photoCode);
 
-        updateUser(user);
+        updateUser(updateMap);
     }
 
-    private void updateUser(User user) {
+    private void updateUser(HashMap<String, String> updateMap) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Const.endPoint)
@@ -129,7 +130,7 @@ public class UpdateFragment extends Fragment {
 
         UserClient userClient = retrofit.create(UserClient.class);
 
-        Call<User> updateCall = userClient.updateUser(tokenResponse.getToken(),user.getId(),user);
+        Call<User> updateCall = userClient.updateUser(tokenResponse.getToken(), user.getId(), updateMap);
 
         updateCall.enqueue(new Callback<User>() {
             @Override
@@ -154,33 +155,5 @@ public class UpdateFragment extends Fragment {
                 Toast.makeText(getActivity(), "Request failure : " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        /*userCall.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-
-                // isSuccess is true if response code => 200 and <= 300
-                if (!response.isSuccessful()) {
-                    // print response body if unsuccessful
-                    try {
-                        Log.i("registerFrag", response.errorBody().string());
-                        Toast.makeText(getActivity(), "Error : " + response.code(), Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        // do nothing
-                    }
-                } else {
-                    Toast.makeText(getActivity(), R.string.inscription_ok, Toast.LENGTH_SHORT).show();
-                    showLoginFragment();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(getActivity(), "Request failure : " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });*/
-
     }
-
 }

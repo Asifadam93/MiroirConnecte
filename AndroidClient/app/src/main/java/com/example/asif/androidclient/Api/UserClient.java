@@ -4,6 +4,8 @@ import com.example.asif.androidclient.Model.TokenRequest;
 import com.example.asif.androidclient.Model.TokenResponse;
 import com.example.asif.androidclient.Model.User;
 
+import java.util.HashMap;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -20,6 +22,10 @@ import retrofit2.http.Path;
 
 public interface UserClient {
 
+    @Headers({
+            "Content-Type: application/json",
+            "User-Agent: android_miroir_configurateur "
+    })
     @POST("auth-tokens")
     Call<TokenResponse> loginUser(@Body TokenRequest user);
 
@@ -36,10 +42,14 @@ public interface UserClient {
             @Path("id") int id
     );
 
+    @Headers({
+            "Content-Type: application/json",
+            "User-Agent: android_miroir_configurateur "
+    })
     @PATCH("user/{id}")
     Call<User> updateUser(
             @Header("X-Auth-Token") String userToken,
             @Path("id") int id,
-            @Body User user
+            @Body HashMap<String, String> updateMap
     );
 }
