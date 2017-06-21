@@ -31,7 +31,7 @@ import retrofit2.Retrofit;
  * Created by Asifadam93 on 18/06/2017.
  */
 
-public class UserFragment extends Fragment {
+public class ModuleFragment extends Fragment {
 
     private View view;
     private TextView textViewUserMsg;
@@ -44,9 +44,9 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.user_layout, container, false);
+        view = inflater.inflate(R.layout.module_layout, container, false);
 
-        tokenResponse = LoginFragment.tokenResponse; // get user details
+        /*tokenResponse = LoginFragment.tokenResponse; // get user details
         user = tokenResponse.getUser();
 
         Log.i("userFrag","User id : "+user.getId());
@@ -56,7 +56,7 @@ public class UserFragment extends Fragment {
 
         setOnClickListeners();
 
-        setUserInfo();
+        setUserInfo();*/
 
         return view;
     }
@@ -89,7 +89,7 @@ public class UserFragment extends Fragment {
         buttonModule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showModuleFragment();
+
             }
         });
 
@@ -176,13 +176,6 @@ public class UserFragment extends Fragment {
         getActivity().getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frameContainer, new UpdateFragment(), "UpdateFragment")
-                .commit();
-    }
-
-    private void showModuleFragment() {
-        getActivity().getFragmentManager()
-                .beginTransaction()
-                .replace(R.id.frameContainer, new ModuleFragment(), "UpdateFragment")
                 .commit();
     }
 }

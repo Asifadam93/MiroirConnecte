@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.asif.androidclient.Fragments.LoginFragment;
+import com.example.asif.androidclient.Fragments.ModuleFragment;
 import com.example.asif.androidclient.R;
 
 public class MainActivity extends Activity {
@@ -27,11 +28,11 @@ public class MainActivity extends Activity {
     }
 
     private void showLoginFragment() {
-        getFragmentManager().beginTransaction().replace(R.id.frameContainer, loginFragment).commit();
+        //getFragmentManager().beginTransaction().replace(R.id.frameContainer, loginFragment).commit();
         //// TODO: 18/06/2017 replace
-        /*getFragmentManager()
+       getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.frameContainer, new UserFragment(), "UserFragment")
-                .commit();*/
+                .replace(R.id.frameContainer, new ModuleFragment(), "UpdateFragment")
+                .commit();
     }
 }
