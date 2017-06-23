@@ -12,20 +12,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.asif.androidclient.Api.ApiService;
+import com.example.asif.androidclient.Api.RestClient;
 import com.example.asif.androidclient.Const;
 import com.example.asif.androidclient.Model.TokenResponse;
 import com.example.asif.androidclient.Model.User;
 import com.example.asif.androidclient.R;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by Asifadam93 on 18/06/2017.
@@ -49,8 +47,8 @@ public class UserFragment extends Fragment {
         tokenResponse = Const.tokenResponse;
         user = tokenResponse.getUser();
 
-        Log.i("userFrag","User id : "+user.getId());
-        Log.i("userFrag","User token : "+tokenResponse.getToken());
+        Log.i("userFrag", "User id : " + user.getId());
+        Log.i("userFrag", "User token : " + tokenResponse.getToken());
 
         initViews();
 
@@ -128,39 +126,29 @@ public class UserFragment extends Fragment {
         });
     }
 
-    private void deleteUser(int id, String token){
+    private void deleteUser(int id, String token) {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Const.endPoint)
-                .build();
+        ApiService apiService = new RestClient().getApiService();
 
-        ApiService apiService = retrofit.create(ApiService.class);
-
-        Call<Void> userDelete = apiService.deleteUser(token,id);
+        Call<Void> userDelete = apiService.deleteUser(token, id);
 
         userDelete.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.i("userFrag",""+response.code());
+                Log.i("userFrag", "" + response.code());
 
-                if (!response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     // print response body if unsuccessful
-                    try {
-                        Log.i("userFrag", response.errorBody().string());
-                        Toast.makeText(getActivity(), "Error : " + response.code(), Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        // do nothing
-                    }
-                } else {
                     Toast.makeText(getActivity(), "Deleted", Toast.LENGTH_SHORT).show();
                     showLoginFragment();
+                } else {
+                    Toast.makeText(getActivity(), "Error : " + response.code(), Toast.LENGTH_LONG).show();
                 }
-
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.i("userFrag",""+t.getMessage());
+                Toast.makeText(getActivity(), "Error : " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

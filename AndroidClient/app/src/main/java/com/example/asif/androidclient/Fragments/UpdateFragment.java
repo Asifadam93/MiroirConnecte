@@ -3,7 +3,6 @@ package com.example.asif.androidclient.Fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +11,17 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.asif.androidclient.Api.ApiService;
+import com.example.asif.androidclient.Api.RestClient;
 import com.example.asif.androidclient.Const;
 import com.example.asif.androidclient.Model.TokenResponse;
 import com.example.asif.androidclient.Model.User;
 import com.example.asif.androidclient.R;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by AAD on 15/06/2017.
@@ -45,8 +42,8 @@ public class UpdateFragment extends Fragment {
 
         view = inflater.inflate(R.layout.update_layout, container, false);
 
-        /*tokenResponse = LoginFragment.tokenResponse;
-        user = tokenResponse.getUser();*/
+        tokenResponse = Const.tokenResponse;
+        user = tokenResponse.getUser();
 
         initView();
         setUserValues();
@@ -123,12 +120,7 @@ public class UpdateFragment extends Fragment {
 
     private void updateUser(HashMap<String, String> updateMap) {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Const.endPoint)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiService apiService = retrofit.create(ApiService.class);
+        ApiService apiService = new RestClient().getApiService();
 
         Call<User> updateCall = apiService.updateUser(tokenResponse.getToken(), user.getId(), updateMap);
 
@@ -136,17 +128,14 @@ public class UpdateFragment extends Fragment {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 // isSuccess is true if response code => 200 and <= 300
-                if (!response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     // print response body if unsuccessful
-                    try {
-                        Log.i("updateFrag", response.errorBody().string());
-                        Toast.makeText(getActivity(), "Error : " + response.code(), Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        // do nothing
-                    }
-                } else {
+
                     Toast.makeText(getActivity(), R.string.update_ok, Toast.LENGTH_SHORT).show();
                     showLoginFragment();
+
+                } else {
+                    Toast.makeText(getActivity(), "Error : " + response.code(), Toast.LENGTH_LONG).show();
                 }
             }
 

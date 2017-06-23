@@ -130,8 +130,6 @@ public class RegisterFragment extends Fragment {
         hashMapUser.put("photo_name", photoCode);
         hashMapUser.put("email", email);
         hashMapUser.put("plain_password", mdp);
-
-
     }
 
     private void registerUser(User user) {
@@ -161,7 +159,5 @@ public class RegisterFragment extends Fragment {
                 Toast.makeText(getActivity(), "Request failure : " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
-
 }
