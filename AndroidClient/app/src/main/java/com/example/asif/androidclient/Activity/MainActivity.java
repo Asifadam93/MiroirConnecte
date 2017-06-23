@@ -28,11 +28,11 @@ public class MainActivity extends Activity {
     }
 
     private void showLoginFragment() {
-        getFragmentManager().beginTransaction().replace(R.id.frameContainer, loginFragment).commit();
+        //getFragmentManager().beginTransaction().replace(R.id.frameContainer, loginFragment).commit();
         //// TODO: 18/06/2017 replace
-       /*getFragmentManager()
+       getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.frameContainer, new ModuleFragment(), "UpdateFragment")
-                .commit();*/
+                .replace(R.id.frameContainer, new ModuleFragment(), "ModuleFragment")
+                .commit();
     }
 }

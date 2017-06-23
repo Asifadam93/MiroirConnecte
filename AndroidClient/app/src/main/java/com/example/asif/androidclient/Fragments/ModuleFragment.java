@@ -7,22 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.asif.androidclient.Api.ApiService;
-import com.example.asif.androidclient.Const;
 import com.example.asif.androidclient.Model.TokenResponse;
 import com.example.asif.androidclient.Model.User;
 import com.example.asif.androidclient.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Asifadam93 on 18/06/2017.
@@ -31,6 +23,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ModuleFragment extends Fragment {
 
     private View view;
+    private ImageButton imageButtonTopLeft, imageButtonTopRight, imageButtonCenterLeft,
+            imageButtonCenterRight, imageButtonBottomLeft, imageButtonBottomRight;
     private TextView textViewUserMsg;
     private TokenResponse tokenResponse;
     private User user;
@@ -45,12 +39,31 @@ public class ModuleFragment extends Fragment {
 
         view = inflater.inflate(R.layout.module_layout, container, false);
 
+        initViews();
 
 
         return view;
     }
 
     private void initViews() {
+        imageButtonTopLeft = (ImageButton) view.findViewById(R.id.module_add_top_left);
+        imageButtonTopRight = (ImageButton) view.findViewById(R.id.module_add_top_right);
+        imageButtonCenterLeft = (ImageButton) view.findViewById(R.id.module_add_center_left);
+        imageButtonCenterRight = (ImageButton) view.findViewById(R.id.module_add_center_right);
+        imageButtonBottomLeft = (ImageButton) view.findViewById(R.id.module_add_bottom_left);
+        imageButtonBottomRight = (ImageButton) view.findViewById(R.id.module_add_bottom_right);
+    }
+
+    private void setClickListener() {
+
+        imageButtonTopLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+            }
+        });
 
     }
 
