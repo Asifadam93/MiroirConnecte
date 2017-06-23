@@ -1,6 +1,5 @@
 package com.example.asif.androidclient.Api;
 
-import com.example.asif.androidclient.Model.TokenRequest;
 import com.example.asif.androidclient.Model.TokenResponse;
 import com.example.asif.androidclient.Model.User;
 
@@ -9,6 +8,7 @@ import java.util.HashMap;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.PATCH;
@@ -20,14 +20,12 @@ import retrofit2.http.Path;
  * Created by Asifadam93 on 16/06/2017.
  */
 
-public interface UserClient {
+public interface ApiService {
 
-    @Headers({
-            "Content-Type: application/json",
-            "User-Agent: android_miroir_configurateur "
-    })
     @POST("auth-tokens")
-    Call<TokenResponse> loginUser(@Body TokenRequest user);
+    Call<TokenResponse> loginUser(
+            @Body HashMap<String, String> user
+    );
 
     @Headers({
             "Content-Type: application/json",
@@ -51,5 +49,11 @@ public interface UserClient {
             @Header("X-Auth-Token") String userToken,
             @Path("id") int id,
             @Body HashMap<String, String> updateMap
+    );
+
+    @GET("user/{id}")
+    Call<User> getUser(
+            @Header("X-Auth-Token") String userToken,
+            @Path("id") int id
     );
 }

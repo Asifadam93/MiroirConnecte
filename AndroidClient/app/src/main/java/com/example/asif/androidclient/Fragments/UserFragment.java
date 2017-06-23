@@ -11,16 +11,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.asif.androidclient.Api.UserClient;
+import com.example.asif.androidclient.Api.ApiService;
 import com.example.asif.androidclient.Const;
-import com.example.asif.androidclient.Model.Modules;
 import com.example.asif.androidclient.Model.TokenResponse;
 import com.example.asif.androidclient.Model.User;
 import com.example.asif.androidclient.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -48,19 +46,11 @@ public class UserFragment extends Fragment {
 
         view = inflater.inflate(R.layout.user_layout, container, false);
 
-        tokenResponse = LoginFragment.tokenResponse; // get user details
+        tokenResponse = Const.tokenResponse;
         user = tokenResponse.getUser();
 
         Log.i("userFrag","User id : "+user.getId());
         Log.i("userFrag","User token : "+tokenResponse.getToken());
-
-        /*Modules[] modules = user.getModules();
-
-        if(modules.length>0){
-            Log.i("userFrag","Module list ok");
-        } else {
-            Log.i("userFrag","Module list empty");
-        }*/
 
         initViews();
 
@@ -144,9 +134,9 @@ public class UserFragment extends Fragment {
                 .baseUrl(Const.endPoint)
                 .build();
 
-        UserClient userClient = retrofit.create(UserClient.class);
+        ApiService apiService = retrofit.create(ApiService.class);
 
-        Call<Void> userDelete = userClient.deleteUser(token,id);
+        Call<Void> userDelete = apiService.deleteUser(token,id);
 
         userDelete.enqueue(new Callback<Void>() {
             @Override

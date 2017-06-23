@@ -3,7 +3,6 @@ package com.example.asif.androidclient.Fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +11,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.asif.androidclient.Api.UserClient;
-import com.example.asif.androidclient.Const;
+import com.example.asif.androidclient.Api.ApiService;
+import com.example.asif.androidclient.Api.RestClient;
 import com.example.asif.androidclient.Model.User;
 import com.example.asif.androidclient.R;
 
-import java.io.IOException;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by AAD on 15/06/2017.
@@ -126,39 +123,35 @@ public class RegisterFragment extends Fragment {
             return;
         }
 
-        User user = new User(prenom, nom, email, mdp, photoCode);
+        //User user = new User(prenom, nom, email, mdp, photoCode);
+        HashMap<String, String> hashMapUser = new HashMap<>();
+        hashMapUser.put("first_name", prenom);
+        hashMapUser.put("last_name", nom);
+        hashMapUser.put("photo_name", photoCode);
+        hashMapUser.put("email", email);
+        hashMapUser.put("plain_password", mdp);
 
-        registerUser(user);
 
     }
 
     private void registerUser(User user) {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Const.endPoint)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        ApiService apiService = new RestClient().getApiService();
 
-        UserClient userClient = retrofit.create(UserClient.class);
-
-        Call<User> userCall = userClient.registerUser(user);
+        Call<User> userCall = apiService.registerUser(user);
 
         userCall.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
 
                 // isSuccess is true if response code => 200 and <= 300
-                if (!response.isSuccessful()) {
-                    // print response body if unsuccessful
-                    try {
-                        Log.i("registerFrag", response.errorBody().string());
-                        Toast.makeText(getActivity(), "Error : " + response.code(), Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        // do nothing
-                    }
-                } else {
+                if (response.isSuccessful()) {
+
                     Toast.makeText(getActivity(), R.string.inscription_ok, Toast.LENGTH_SHORT).show();
                     showLoginFragment();
+
+                } else {
+                    Toast.makeText(getActivity(), "Error : " + response.code(), Toast.LENGTH_LONG).show();
                 }
 
             }

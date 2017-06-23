@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.asif.androidclient.Api.UserClient;
+import com.example.asif.androidclient.Api.ApiService;
 import com.example.asif.androidclient.Const;
 import com.example.asif.androidclient.Model.TokenResponse;
 import com.example.asif.androidclient.Model.User;
@@ -45,8 +45,8 @@ public class UpdateFragment extends Fragment {
 
         view = inflater.inflate(R.layout.update_layout, container, false);
 
-        tokenResponse = LoginFragment.tokenResponse;
-        user = tokenResponse.getUser();
+        /*tokenResponse = LoginFragment.tokenResponse;
+        user = tokenResponse.getUser();*/
 
         initView();
         setUserValues();
@@ -128,9 +128,9 @@ public class UpdateFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        UserClient userClient = retrofit.create(UserClient.class);
+        ApiService apiService = retrofit.create(ApiService.class);
 
-        Call<User> updateCall = userClient.updateUser(tokenResponse.getToken(), user.getId(), updateMap);
+        Call<User> updateCall = apiService.updateUser(tokenResponse.getToken(), user.getId(), updateMap);
 
         updateCall.enqueue(new Callback<User>() {
             @Override

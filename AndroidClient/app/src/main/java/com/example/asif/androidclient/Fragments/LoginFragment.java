@@ -9,29 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.asif.androidclient.Api.UserClient;
+import com.example.asif.androidclient.Api.ApiService;
+import com.example.asif.androidclient.Api.RestClient;
 import com.example.asif.androidclient.Const;
-import com.example.asif.androidclient.Model.TokenRequest;
 import com.example.asif.androidclient.Model.TokenResponse;
-import com.example.asif.androidclient.Model.User;
 import com.example.asif.androidclient.R;
 
 import java.net.HttpURLConnection;
-import java.util.logging.Level;
+import java.util.HashMap;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by AAD on 14/06/2017.
@@ -44,8 +36,6 @@ public class LoginFragment extends Fragment {
     private Button buttonLogin;
     private TextView textViewRegister;
     private View view;
-    private LinearLayout loginLayout;
-    public static TokenResponse tokenResponse; // used in UserFragment
 
     @Nullable
     @Override
@@ -79,7 +69,6 @@ public class LoginFragment extends Fragment {
         editTextPassword = (EditText) view.findViewById(R.id.login_mdp);
         buttonLogin = (Button) view.findViewById(R.id.login_button);
         textViewRegister = (TextView) view.findViewById(R.id.login_inscription);
-        loginLayout = (LinearLayout) view.findViewById(R.id.login_layout);
 
         // TODO: 14/06/2017  Setting text selector over textviews
     }
@@ -99,57 +88,45 @@ public class LoginFragment extends Fragment {
             return;
         }
 
-        //create user object
-        TokenRequest user = new TokenRequest(email, password);
+        HashMap<String, String> userMap = new HashMap<>();
+        userMap.put("login", email);
+        userMap.put("password", password);
 
-        //okHttp client
-        OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        okHttpClient.addInterceptor(loggingInterceptor);
+        postUser(userMap);
+    }
 
-        Retrofit retrofitBuilder = new Retrofit.Builder()
-                .baseUrl(Const.endPoint)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient.build())
-                .build();
+    private void postUser(HashMap<String, String> user) {
 
-        UserClient userClient = retrofitBuilder.create(UserClient.class);
+        ApiService apiService = new RestClient().getApiService();
 
-        final Call<TokenResponse> userCall = userClient.loginUser(user);
+        final Call<TokenResponse> tokenResponseCall = apiService.loginUser(user);
 
-        userCall.enqueue(new Callback<TokenResponse>() {
+        tokenResponseCall.enqueue(new Callback<TokenResponse>() {
             @Override
             public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
 
-                int responseCode = response.code();
+                if (response.isSuccessful()) {
 
-                switch (responseCode) {
+                    Const.tokenResponse = response.body(); // save token and user data
+                    launchUserActivity();
 
-                    case HttpsURLConnection.HTTP_CREATED:
+                } else {
 
-                        tokenResponse = response.body();
-
-                        //Const.token = response.body().getToken(); // store received token for future use
-                        launchUserActivity();
-                        break;
-
-                    case HttpURLConnection.HTTP_BAD_REQUEST:
-                        Toast.makeText(getActivity(), "Invalid credentials", Toast.LENGTH_SHORT).show();
-                        break;
-
-                    default:
+                    if (response.code() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                        Toast.makeText(getActivity(), R.string.invalid_cred, Toast.LENGTH_SHORT).show();
+                    } else {
                         Toast.makeText(getActivity(), "Response error : " + response.code(), Toast.LENGTH_SHORT).show();
-                        break;
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<TokenResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Request failure : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Fail : " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
     private void launchUserActivity() {
 

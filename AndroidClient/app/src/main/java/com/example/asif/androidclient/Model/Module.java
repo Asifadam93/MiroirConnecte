@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by AAD on 21/06/2017.
  */
 
-public class Modules {
+public class Module {
 
     @SerializedName("id")
     private Integer id;
@@ -60,7 +60,7 @@ public class Modules {
 
     @Override
     public String toString() {
-        return "Modules{" +
+        return "Module{" +
                 "id=" + id +
                 ", type='" + type + '\'' +
                 ", name='" + name + '\'' +

@@ -10,6 +10,7 @@ import java.util.List;
 
 public class User {
 
+    @SerializedName("id")
     private Integer id;
     @SerializedName("first_name")
     private String firstName;
@@ -19,16 +20,13 @@ public class User {
     private String email;
     @SerializedName("photo_name")
     private String photoName;
-    @SerializedName("plain_password")
-    private String password;
     @SerializedName("modules")
-    private Modules[] modules;
+    private List<Module> modules = null;
 
     public User(String firstName, String lastName, String email, String password, String photoName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
         this.photoName = photoName;
     }
 
@@ -59,11 +57,7 @@ public class User {
         return photoName;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public Modules[] getModules() {
+    public List<Module> getModules() {
         return modules;
     }
 
@@ -91,7 +85,6 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", photoName='" + photoName + '\'' +
-                ", password='" + password + '\'' +
                 '}';
     }
 }
