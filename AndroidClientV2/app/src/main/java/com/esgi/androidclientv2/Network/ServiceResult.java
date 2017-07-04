@@ -1,5 +1,7 @@
 package com.esgi.androidclientv2.Network;
 
+import com.esgi.androidclientv2.Model.RestError;
+
 /**
  * Created by Asifadam93 on 03/07/2017.
  */

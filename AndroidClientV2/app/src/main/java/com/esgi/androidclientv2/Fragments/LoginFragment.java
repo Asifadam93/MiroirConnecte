@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esgi.androidclientv2.Model.RestError;
 import com.esgi.androidclientv2.Model.TokenResponse;
 import com.esgi.androidclientv2.Network.IServiceResultListener;
-import com.esgi.androidclientv2.Network.RestError;
 import com.esgi.androidclientv2.Network.RetrofitUserService;
 import com.esgi.androidclientv2.Network.ServiceResult;
 import com.esgi.androidclientv2.R;
@@ -89,14 +90,16 @@ public class LoginFragment extends Fragment {
             @Override
             public void onResult(ServiceResult<TokenResponse> result) {
 
-                RestError error = result.getRestError();
+                Log.i("RetrofitUserService", "onResult");
 
-                if (error == null) {
+                TokenResponse tokenResponse = result.getData();
 
-                    Toast.makeText(getActivity(), R.string.conn_ok, Toast.LENGTH_SHORT).show();
-
+                if (tokenResponse != null) {
+                    Toast.makeText(getActivity(),getActivity().getString(R.string.conn_ok),Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                    // error
+                    RestError error = result.getRestError();
+                    Toast.makeText(getActivity(),error.getErrorDetails(),Toast.LENGTH_SHORT).show();
                 }
             }
         });

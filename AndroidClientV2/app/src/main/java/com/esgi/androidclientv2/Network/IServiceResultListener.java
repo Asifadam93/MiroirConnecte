@@ -5,7 +5,5 @@ package com.esgi.androidclientv2.Network;
  */
 
 public interface IServiceResultListener<T> {
-
     void onResult(ServiceResult<T> result);
-
 }

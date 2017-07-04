@@ -2,13 +2,17 @@ package com.esgi.androidclientv2.Network;
 
 import android.util.Log;
 
+import com.esgi.androidclientv2.Model.RestError;
 import com.esgi.androidclientv2.Model.TokenResponse;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Converter;
 import retrofit2.Response;
 
 /**
@@ -36,22 +40,25 @@ public class RetrofitUserService implements IUserService {
             public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
                 Log.i("RetrofitUserService", "" + response.code());
 
-                ServiceResult<TokenResponse> serviceResult = new ServiceResult<>();
+                ServiceResult<TokenResponse> result = new ServiceResult<>();
 
                 if (response.isSuccessful()) {
-                    serviceResult.setData(response.body());
+                    result.setData(response.body());
                 } else {
+                    // parsing server error msg
+                    Converter<ResponseBody, RestError> converter = RetrofitSession.getInstance()
+                            .responseBodyConverter(RestError.class, new Annotation[0]);
                     try {
-                        serviceResult.setRestError(new RestError(response.code(), response.errorBody().string()));
+                        RestError error = converter.convert(response.errorBody());
+                        result.setRestError(error);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        result.setRestError(new RestError());
                     }
                 }
 
                 if (iServiceResultListener != null) {
-                    iServiceResultListener.onResult(serviceResult);
+                    iServiceResultListener.onResult(result);
                 }
-
             }
 
             @Override
