@@ -8,7 +8,14 @@ from pytz import timezone
 # la fenêtre
 fenetre = Tk()
 fenetre.configure(bg="#000000", pady=20, padx=20)
+
+# définitions des variables destinée à la taille des frames
 fenetre.attributes("-fullscreen", True)
+fenetre_block_width = ((fenetre.winfo_screenwidth() - 40) / 3)
+fenetre_block_height = ((fenetre.winfo_screenheight() -40) / 3)
+fenetre_block_center_x = (fenetre_block_width /2)
+fenetre_block_center_y = (fenetre_block_height /2)
+
 
 # définitions des variables destinée à la taille des frames
 fenetre.attributes("-fullscreen", True)
@@ -49,16 +56,18 @@ labelTempoNE_heure.pack(pady=0, padx=0, anchor=NW)
 
 
 def add_widget_meteo(cellule_position):
-    global images, fenetre_block_height, fenetre_block_width
+    global images, fenetre_block_height
 
     images.append(PhotoImage(file="./img/weather-icon/cloudy.gif"))
-    canvas = Canvas(cellule_position, width=fenetre_block_width, height=fenetre_block_height, bg='#000000', borderwidth=0, highlightcolor='#000000',
+    canvas = Canvas(cellule_position, width=256, height=128, bg='#ff0000', borderwidth=0, highlightcolor='#000000',
                     highlightbackground='#000000')
-    canvas.create_image(fenetre_block_width/2 -138, fenetre_block_height/2 -64, anchor=CENTER, image=images[(len(images)-1)])
-    canvas.create_text(fenetre_block_width/2 + 10, fenetre_block_height/2 -64, text="21.4°", font="Arial 50", fill="white", anchor=CENTER)
-    canvas.create_text(fenetre_block_width/2 +20, fenetre_block_height/2 -124, text="Paris", font="Arial 20", fill="white", anchor=CENTER)
-    canvas.create_text(256, 80, text="68%", font="Arial 20", fill="white", anchor=CENTER)
-    canvas.pack(pady=0, padx=0, anchor=CENTER)
+    canvas.create_image(0, 64, anchor=W, image=images[(len(images)-1)])
+
+    canvas.create_text(256, 44, text="21.4°", font="Arial 50", fill="white", anchor=E)
+    canvas.create_text(256, 94, text="68%", font="Arial 20", fill="white", anchor=E)
+    #     canvas.create_text(256, 94, text="Paris", font="Arial 20", fill="white", anchor=E)
+    canvas.place(relx=0.5, rely=0.5, anchor=CENTER)
+    canvas.pack()
     return canvas
 
 
@@ -75,7 +84,6 @@ def update():
     labelTempoNE_heure.config(text=time1)
 
     labelTempoNW_heure.after(1000, update)
-
 
 
 widget_meteo_1 = add_widget_meteo(cellules[1])
