@@ -77,7 +77,7 @@ def add_widget_meteo(cellule_position):
     global images, fenetre_block_height
 
     images.append(PhotoImage(file="./img/weather-icon/sunny.gif"))
-    canvas = Canvas(cellule_position, width=256, height=128, bg='#FF0000', borderwidth=0, highlightcolor='#000000',
+    canvas = Canvas(cellule_position, width=256, height=128, bg='#000000', borderwidth=0, highlightcolor='#000000',
                     highlightbackground='#000000')
     canvas.create_image(0, 64, anchor=W, image=images[(len(images)-1)])
 
