@@ -30,12 +30,30 @@ images = []
 ((fenetre.winfo_screenwidth() -40)/3)
 
 
+
+
 # génération de la grille ici les Frame seront vides mais prendront tout l'espace disponible grâce au weight
 for ligne in range(3):
     for colonne in range(3):
-
         tempo = Frame(fenetre, relief=GROOVE, bg='#000000', width=fenetre_block_width, height=fenetre_block_height) # 000000 quand les test sont terminés
-        tempo.grid(row=ligne, column=colonne, sticky=W+E+N+S)
+
+        sticky=N+S+E+W
+
+        if ligne == 0:
+            sticky=N
+        elif ligne == 1:
+            sticky=N+S
+        else:
+            sticky = S
+
+        if colonne == 0:
+            sticky = sticky+W
+        elif colonne == 1:
+            sticky = sticky+W+E
+        else:
+            sticky = sticky+E
+
+        tempo.grid(row=ligne, column=colonne, sticky=sticky)
         cellules.append(tempo)
 
 
@@ -59,7 +77,7 @@ def add_widget_meteo(cellule_position):
     global images, fenetre_block_height
 
     images.append(PhotoImage(file="./img/weather-icon/sunny.gif"))
-    canvas = Canvas(cellule_position, width=256, height=fenetre_block_height, bg='#000000', borderwidth=0, highlightcolor='#000000',
+    canvas = Canvas(cellule_position, width=256, height=128, bg='#FF0000', borderwidth=0, highlightcolor='#000000',
                     highlightbackground='#000000')
     canvas.create_image(0, 64, anchor=W, image=images[(len(images)-1)])
 
