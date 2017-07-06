@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AndroidClientV2</string>
+    <string name="app_name">Miroir configurateur</string>
     <string name="connexion">Connexion</string>
     <string name="e_mail">E-mail</string>
     <string name="demande_inscription">Pas de compte, inscrivez-vous</string>

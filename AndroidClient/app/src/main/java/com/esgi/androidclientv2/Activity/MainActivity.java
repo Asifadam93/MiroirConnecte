@@ -19,4 +19,9 @@ public class MainActivity extends Activity {
     private void showLoginFragment() {
         getFragmentManager().beginTransaction().replace(R.id.frameContainer, new LoginFragment()).commit();
     }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+    }
 }
