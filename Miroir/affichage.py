@@ -59,14 +59,14 @@ def add_widget_meteo(cellule_position):
     global images, fenetre_block_height
 
     images.append(PhotoImage(file="./img/weather-icon/sunny.gif"))
-    canvas = Canvas(cellule_position, width=256, height=128, bg='#000000', borderwidth=0, highlightcolor='#000000',
+    canvas = Canvas(cellule_position, width=256, height=fenetre_block_height, bg='#000000', borderwidth=0, highlightcolor='#000000',
                     highlightbackground='#000000')
     canvas.create_image(0, 64, anchor=W, image=images[(len(images)-1)])
 
     canvas.create_text(128, 44, text="21.4°", font="Arial 30", fill="white", anchor=W)
     canvas.create_text(128, 74, text="68%", font="Arial 15", fill="white", anchor=W)
     canvas.create_text(128, 94, text="Paris", font="Arial 15", fill="white", anchor=W)
-    canvas.pack(anchor=E)
+    canvas.pack(anchor=S)
     return canvas
 
 
@@ -85,8 +85,7 @@ def update():
     labelTempoNW_heure.after(1000, update)
 
 
-widget_meteo_1 = add_widget_meteo(cellules[1])
-widget_meteo_2 = add_widget_meteo(cellules[5])
+widget_meteo_2 = add_widget_meteo(cellules[7])
 
 update()
 fenetre.mainloop()
