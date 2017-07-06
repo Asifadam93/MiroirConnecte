@@ -60,15 +60,17 @@ def get_users():
         print("progression : ", (((user_index+1)/nombre_utilisateurs)*100), "%")
         #pprint(user)
 
-        if not isfile("./img/" + user["photo_name"]):
+        if not isfile("./img/photos/" + user["photo_name"]):
             print("Téléchargement de la photo de", user["first_name"], user["last_name"], "en cours")
 
             urllib.request.urlretrieve(
                 api_config.params["url_api"] + "/img/photos/" + user["photo_name"],
-                "./img/" + user["photo_name"]
+                "./img/photos/" + user["photo_name"]
             )
         else:
             print("Photo de", user["first_name"], user["last_name"], "déjà présente")
+
+    return users
 
 
 def get_user(id):
@@ -79,9 +81,7 @@ def get_user(id):
     """
     users_request = requests.get(api_config.params["url_api"] + "/user/" + str(id), headers=token_header())
     user = json.loads(users_request.text)
-    for modules in user["modules"]:
-        print("=====================")
-        pprint(modules)
+    return user
 
 
 def post_photo(photo):
@@ -93,12 +93,9 @@ def post_photo(photo):
     file = {'image': open(photo, 'rb')}
 
     photo_request = requests.post(api_config.params["url_api"] + "/photo", headers=token_header(), files=file)
-    print("=====================")
+
     if photo_request.status_code == 200:
         data_photo = json.loads(photo_request.text)
         return data_photo["name"]
-
-get_users()
-get_user(16)
-
-print(post_photo("./img/peter.jpg"))
+    else:
+        return None
