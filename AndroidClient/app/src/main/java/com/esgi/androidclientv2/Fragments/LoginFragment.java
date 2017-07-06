@@ -99,8 +99,12 @@ public class LoginFragment extends Fragment {
 
                 if (tokenResponse != null) {
                     Toast.makeText(getActivity(), getActivity().getString(R.string.conn_ok), Toast.LENGTH_SHORT).show();
-                    
-                    startActivity(new Intent(getActivity(), UserActivity.class));
+
+                    // start userActivity with tokenData
+                    Intent intent = new Intent(getActivity(), UserActivity.class);
+                    intent.putExtra("UserInfo", tokenResponse);
+                    startActivity(intent);
+
                 } else {
                     // error
                     Toast.makeText(getActivity(), result.getErrorMsg(), Toast.LENGTH_LONG).show();

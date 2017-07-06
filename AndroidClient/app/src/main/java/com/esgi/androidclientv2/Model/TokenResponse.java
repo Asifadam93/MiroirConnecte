@@ -1,5 +1,8 @@
 package com.esgi.androidclientv2.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -8,7 +11,7 @@ import java.io.Serializable;
  * Created by Asifadam93 on 16/06/2017.
  */
 
-public class TokenResponse implements Serializable {
+public class TokenResponse implements Parcelable {
 
     @SerializedName("id")
     private Integer id;
@@ -43,5 +46,35 @@ public class TokenResponse implements Serializable {
                 ", createdTime='" + createdTime + '\'' +
                 ", userList=" + userList +
                 '}';
+    }
+
+    protected TokenResponse(Parcel in) {
+        token = in.readString();
+        createdTime = in.readString();
+        userList = in.readParcelable(User.class.getClassLoader());
+    }
+
+    public static final Creator<TokenResponse> CREATOR = new Creator<TokenResponse>() {
+        @Override
+        public TokenResponse createFromParcel(Parcel in) {
+            return new TokenResponse(in);
+        }
+
+        @Override
+        public TokenResponse[] newArray(int size) {
+            return new TokenResponse[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(token);
+        parcel.writeString(createdTime);
+        parcel.writeParcelable(userList, i);
     }
 }

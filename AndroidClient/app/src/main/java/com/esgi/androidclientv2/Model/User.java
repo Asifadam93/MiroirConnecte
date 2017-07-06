@@ -1,5 +1,8 @@
 package com.esgi.androidclientv2.Model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -8,7 +11,7 @@ import java.util.List;
  * Created by Asif on 09/06/2017.
  */
 
-public class User {
+public class User implements Parcelable {
 
     @SerializedName("id")
     private Integer id;
@@ -20,8 +23,8 @@ public class User {
     private String email;
     @SerializedName("photo_name")
     private String photoName;
-    //@SerializedName("modules")
-    //private List<Module> modules = null;
+    @SerializedName("modules")
+    private List<Module> modules = null;
 
     public User(String firstName, String lastName, String email, String password, String photoName) {
         this.firstName = firstName;
@@ -86,5 +89,39 @@ public class User {
                 ", email='" + email + '\'' +
                 ", photoName='" + photoName + '\'' +
                 '}';
+    }
+
+    protected User(Parcel in) {
+        firstName = in.readString();
+        lastName = in.readString();
+        email = in.readString();
+        photoName = in.readString();
+        modules = in.createTypedArrayList(Module.CREATOR);
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(firstName);
+        parcel.writeString(lastName);
+        parcel.writeString(email);
+        parcel.writeString(photoName);
+        parcel.writeTypedList(modules);
     }
 }
