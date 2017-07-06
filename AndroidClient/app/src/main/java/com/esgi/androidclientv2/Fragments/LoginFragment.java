@@ -2,6 +2,7 @@ package com.esgi.androidclientv2.Fragments;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esgi.androidclientv2.Activity.UserActivity;
 import com.esgi.androidclientv2.Model.TokenResponse;
 import com.esgi.androidclientv2.Network.IServiceResultListener;
 import com.esgi.androidclientv2.Network.RetrofitUserService;
@@ -97,7 +99,8 @@ public class LoginFragment extends Fragment {
 
                 if (tokenResponse != null) {
                     Toast.makeText(getActivity(), getActivity().getString(R.string.conn_ok), Toast.LENGTH_SHORT).show();
-                    // TODO: 06/07/2017 call user activity
+                    
+                    startActivity(new Intent(getActivity(), UserActivity.class));
                 } else {
                     // error
                     Toast.makeText(getActivity(), result.getErrorMsg(), Toast.LENGTH_LONG).show();
