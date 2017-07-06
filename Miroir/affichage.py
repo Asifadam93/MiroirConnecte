@@ -43,7 +43,7 @@ for ligne in range(3):
 labelTempoNW_titre = Label(cellules[2], text="Heure à Tahiti :", fg="white", bg='#000000', font=('Arial', 20))
 labelTempoNW_titre.pack(pady=0, padx=0, anchor=NE)
 labelTempoNW_heure = Label(cellules[2], text="test", fg="white", bg='#000000', font=('Arial', 50))
-labelTempoNW_heure.pack(pady=0, padx=0, anchor=NE)
+labelTempoNW_heure.pack(anchor=NE)
 
 # test heure à Paris
 labelTempoNE_titre = Label(cellules[0], text="Heure à Paris :", fg="white", bg='#000000', font=('Arial', 20))
@@ -58,16 +58,15 @@ labelTempoNE_heure.pack(pady=0, padx=0, anchor=NW)
 def add_widget_meteo(cellule_position):
     global images, fenetre_block_height
 
-    images.append(PhotoImage(file="./img/weather-icon/cloudy.gif"))
-    canvas = Canvas(cellule_position, width=256, height=128, bg='#ff0000', borderwidth=0, highlightcolor='#000000',
+    images.append(PhotoImage(file="./img/weather-icon/sunny.gif"))
+    canvas = Canvas(cellule_position, width=256, height=128, bg='#000000', borderwidth=0, highlightcolor='#000000',
                     highlightbackground='#000000')
     canvas.create_image(0, 64, anchor=W, image=images[(len(images)-1)])
 
-    canvas.create_text(256, 44, text="21.4°", font="Arial 50", fill="white", anchor=E)
-    canvas.create_text(256, 94, text="68%", font="Arial 20", fill="white", anchor=E)
-    #     canvas.create_text(256, 94, text="Paris", font="Arial 20", fill="white", anchor=E)
-    canvas.place(relx=0.5, rely=0.5, anchor=CENTER)
-    canvas.pack()
+    canvas.create_text(128, 44, text="21.4°", font="Arial 30", fill="white", anchor=W)
+    canvas.create_text(128, 74, text="68%", font="Arial 15", fill="white", anchor=W)
+    canvas.create_text(128, 94, text="Paris", font="Arial 15", fill="white", anchor=W)
+    canvas.pack(anchor=E)
     return canvas
 
 
@@ -88,6 +87,7 @@ def update():
 
 widget_meteo_1 = add_widget_meteo(cellules[1])
 widget_meteo_2 = add_widget_meteo(cellules[5])
+
 update()
 fenetre.mainloop()
 
