@@ -6,3 +6,7 @@
 .idea/workspace.xml
 .idea/misc.xml
 .idea/ProjetAnnuel.iml
+
+*.pyc
+
+*.pyc
