@@ -2,17 +2,13 @@ package com.esgi.androidclientv2.Network;
 
 import android.util.Log;
 
-import com.esgi.androidclientv2.Model.RestError;
 import com.esgi.androidclientv2.Model.TokenResponse;
+import com.esgi.androidclientv2.Model.User;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Converter;
 import retrofit2.Response;
 
 /**
@@ -33,9 +29,7 @@ public class RetrofitUserService implements IUserService {
     @Override
     public void login(Map<String, String> loginUserMap, final IServiceResultListener<TokenResponse> iServiceResultListener) {
 
-        Call<TokenResponse> tokenResponseCall = getRetrofitUserService().login(loginUserMap);
-
-        tokenResponseCall.enqueue(new Callback<TokenResponse>() {
+        getRetrofitUserService().login(loginUserMap).enqueue(new Callback<TokenResponse>() {
             @Override
             public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
                 Log.i("RetrofitUserService", "" + response.code());
@@ -46,14 +40,25 @@ public class RetrofitUserService implements IUserService {
                     result.setData(response.body());
                 } else {
                     // parsing server error msg
-                    Converter<ResponseBody, RestError> converter = RetrofitSession.getInstance()
+                    /*Converter<ResponseBody, RestError> converter = RetrofitSession.getInstance()
                             .responseBodyConverter(RestError.class, new Annotation[0]);
                     try {
                         RestError error = converter.convert(response.errorBody());
                         result.setRestError(error);
                     } catch (IOException e) {
                         result.setRestError(new RestError());
+                    }*/
+
+                    switch (response.code()) {
+
+                        case 400:
+                            result.setErrorMsg("Identifiant et/ou mot de passe incorrect");
+                            break;
+
+                        default:
+                            result.setErrorMsg("Erreur de connexion");
                     }
+
                 }
 
                 if (iServiceResultListener != null) {
@@ -66,11 +71,48 @@ public class RetrofitUserService implements IUserService {
 
                 Log.i("RetrofitUserService", "Error : " + t.getMessage());
 
-                ServiceResult<TokenResponse> serviceResult = new ServiceResult<>();
-                serviceResult.setRestError(new RestError(t.getMessage()));
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(new ServiceResult<TokenResponse>(t.getMessage()));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void register(Map<String, String> registerUserMap, final IServiceResultListener<User> iServiceResultListener) {
+
+        getRetrofitUserService().registerUser(registerUserMap).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+
+                ServiceResult<User> result = new ServiceResult<User>();
+
+                if (response.isSuccessful()) {
+                    result.setData(response.body());
+                } else {
+
+                    switch (response.code()) {
+
+                        case 400:
+                            result.setErrorMsg("Utilisateur existe déjà");
+                            break;
+
+                        default:
+                            result.setErrorMsg("Erreur d'inscription");
+
+                    }
+                }
 
                 if (iServiceResultListener != null) {
-                    iServiceResultListener.onResult(serviceResult);
+                    iServiceResultListener.onResult(result);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(new ServiceResult<User>(t.getMessage()));
                 }
             }
         });

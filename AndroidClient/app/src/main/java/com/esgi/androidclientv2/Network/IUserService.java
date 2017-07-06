@@ -1,6 +1,7 @@
 package com.esgi.androidclientv2.Network;
 
 import com.esgi.androidclientv2.Model.TokenResponse;
+import com.esgi.androidclientv2.Model.User;
 
 import java.util.Map;
 
@@ -10,6 +11,8 @@ import java.util.Map;
 
 public interface IUserService {
 
-    void login(Map<String,String> loginUserMap, IServiceResultListener<TokenResponse> iServiceResultListener);
+    void login(Map<String, String> loginUserMap, IServiceResultListener<TokenResponse> iServiceResultListener);
+
+    void register(Map<String, String> registerUserMap, IServiceResultListener<User> iServiceResultListener);
 
 }

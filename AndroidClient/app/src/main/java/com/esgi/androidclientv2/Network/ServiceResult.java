@@ -9,7 +9,15 @@ import com.esgi.androidclientv2.Model.RestError;
 public class ServiceResult<T> {
 
     private T data;
-    private RestError restError;
+    private String errorMsg;
+
+    public ServiceResult() {
+
+    }
+
+    public ServiceResult(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
 
     public T getData() {
         return data;
@@ -19,11 +27,11 @@ public class ServiceResult<T> {
         this.data = data;
     }
 
-    public RestError getRestError() {
-        return restError;
+    public String getErrorMsg() {
+        return errorMsg;
     }
 
-    public void setRestError(RestError restError) {
-        this.restError = restError;
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }

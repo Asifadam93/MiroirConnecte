@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.esgi.androidclientv2.Model.RestError;
 import com.esgi.androidclientv2.Model.TokenResponse;
 import com.esgi.androidclientv2.Network.IServiceResultListener;
 import com.esgi.androidclientv2.Network.RetrofitUserService;
@@ -34,6 +33,7 @@ public class LoginFragment extends Fragment {
     private TextView textViewRegister;
     private View view;
     private RetrofitUserService retrofitUserService;
+    private RegisterFragment registerFragment;
 
     @Nullable
     @Override
@@ -53,7 +53,7 @@ public class LoginFragment extends Fragment {
         textViewRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //fragmentManager.beginTransaction().replace(R.id.frameContainer, new RegisterFragment(), "RegisterFragment").commit();
+                fragmentManager.beginTransaction().replace(R.id.frameContainer, getRegisterFragment(), "RegisterFragment").commit();
             }
         });
 
@@ -61,6 +61,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void initViews() {
+        fragmentManager = getActivity().getFragmentManager();
         editTextEmail = (EditText) view.findViewById(R.id.login_email);
         editTextPassword = (EditText) view.findViewById(R.id.login_mdp);
         buttonLogin = (Button) view.findViewById(R.id.login_button);
@@ -95,11 +96,11 @@ public class LoginFragment extends Fragment {
                 TokenResponse tokenResponse = result.getData();
 
                 if (tokenResponse != null) {
-                    Toast.makeText(getActivity(),getActivity().getString(R.string.conn_ok),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.conn_ok), Toast.LENGTH_SHORT).show();
+                    // TODO: 06/07/2017 call user activity
                 } else {
                     // error
-                    RestError error = result.getRestError();
-                    Toast.makeText(getActivity(),error.getErrorDetails(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), result.getErrorMsg(), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -112,4 +113,10 @@ public class LoginFragment extends Fragment {
         return retrofitUserService;
     }
 
+    private RegisterFragment getRegisterFragment() {
+        if (registerFragment == null) {
+            registerFragment = new RegisterFragment();
+        }
+        return registerFragment;
+    }
 }
