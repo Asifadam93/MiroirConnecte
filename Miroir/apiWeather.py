@@ -11,11 +11,14 @@ def get_actual_weather_with_city(city, country):
     :return:
     '''
     # TODO try except
-    url_params = {"appid": api_config.params["token_weather"], "units": "metric", "lang": "fr"}
-    query = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "," + country
-    req = requests.get(query, params=url_params)
-    data = req.json()
-    return data
+    try:
+        url_params = {"appid": api_config.params["token_weather"], "units": "metric", "lang": "fr"}
+        query = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "," + country
+        req = requests.get(query, params=url_params)
+        data = req.json()
+        return data
+    except:
+        return None
 
 
 def weather_api_icon_converter(icon):

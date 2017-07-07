@@ -27,8 +27,6 @@ def connection():
 
         data_token = json.loads(connection_request.text)
 
-        # pprint(data_token)
-
         token_id = data_token["id"]
         token = data_token["value"]
 
@@ -36,6 +34,7 @@ def connection():
         print(token)
     else:
         connection_request.raise_for_status()
+
 
 def token_header():
     """
@@ -46,29 +45,39 @@ def token_header():
         connection()
     return {'X-Auth-Token': token}
 
+
 def get_users():
     """
     Permet de récupérer la liste de tout les utilisateurs et de télécharger leur photo
     """
-    #print (token_header())
-    users_request = requests.get(api_config.params["url_api"] + "/users", headers=token_header())
-    users = json.loads(users_request.text)
+    # récupération des utilisateurs sur l'api du mirroir
+    try:
+        users_request = requests.get(api_config.params["url_api"] + "/users", headers=token_header())
+        users = json.loads(users_request.text)
+    except:
+        users = []
+
+    # calcul du nombre d'utilisateurs (pour l'affichage du pourcentage
     nombre_utilisateurs = len(users)
 
+    # on récupère la photo de chaque utilisateur que l'on n'a pas encore
     for user_index, user in enumerate(users):
 
         print("progression : ", (((user_index+1)/nombre_utilisateurs)*100), "%")
-        #pprint(user)
 
+        # vérification de la présence de la photo
         if not isfile("./img/photos/" + user["photo_name"]):
-            print("Téléchargement de la photo de", user["first_name"], user["last_name"], "en cours")
-
-            urllib.request.urlretrieve(
-                api_config.params["url_api"] + "/img/photos/" + user["photo_name"],
-                "./img/photos/" + user["photo_name"]
-            )
-        else:
-            print("Photo de", user["first_name"], user["last_name"], "déjà présente")
+            # print("Téléchargement de la photo de", user["first_name"], user["last_name"], "en cours")
+            # récupération
+            try:
+                urllib.request.urlretrieve(
+                    api_config.params["url_api"] + "/img/photos/" + user["photo_name"],
+                    "./img/photos/" + user["photo_name"]
+                )
+            except:
+                print("Photo de", user["first_name"], user["last_name"], "introuvable")
+        # else:
+            # print("Photo de", user["first_name"], user["last_name"], "déjà présente")
 
     return users
 
@@ -79,9 +88,12 @@ def get_user(id):
     :param id:
     :return:
     """
-    users_request = requests.get(api_config.params["url_api"] + "/user/" + str(id), headers=token_header())
-    user = json.loads(users_request.text)
-    return user
+    try:
+        users_request = requests.get(api_config.params["url_api"] + "/user/" + str(id), headers=token_header())
+        user = json.loads(users_request.text)
+        return user
+    except:
+        return None
 
 
 def post_photo(photo):
