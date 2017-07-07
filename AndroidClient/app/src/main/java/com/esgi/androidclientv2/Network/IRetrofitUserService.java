@@ -8,6 +8,7 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -36,5 +37,11 @@ public interface IRetrofitUserService {
             @Header("X-Auth-Token") String userToken,
             @Path("id") int id,
             @Body Map<String, String> updateMap
+    );
+
+    @GET("/user/{id}")
+    Call<User> getUser(
+            @Header("X-Auth-Token") String userToken,
+            @Path("id") int id
     );
 }

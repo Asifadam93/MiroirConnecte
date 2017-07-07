@@ -181,4 +181,11 @@ public class RetrofitUserService implements IUserService {
             }
         });
     }
+
+    @Override
+    public void getUser(String token, int userId, IServiceResultListener<User> iServiceResultListener) {
+
+        
+
+    }
 }

@@ -19,4 +19,6 @@ public interface IUserService {
 
     void update(String token, int userId, Map<String, String> updateUserMap, IServiceResultListener<User> iServiceResultListener);
 
+    void getUser(String token, int userId, IServiceResultListener<User> iServiceResultListener);
+
 }
