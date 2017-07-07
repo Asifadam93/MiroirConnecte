@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import com.esgi.androidclientv2.Model.User;
 import com.esgi.androidclientv2.R;
 import com.squareup.picasso.Picasso;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserActivity extends Activity {
@@ -33,9 +35,9 @@ public class UserActivity extends Activity {
         if (intent != null) {
             tokenResponse = intent.getParcelableExtra("UserInfo");
             user = tokenResponse.getUser();
-            Log.i("UserActivity","Token : "+tokenResponse.getToken()); // test
+            Log.i("UserActivity", "Token : " + tokenResponse.getToken()); // test
         } else {
-            Log.i("UserActivity","Error data transmission");
+            Log.i("UserActivity", "Error data transmission");
             return;
         }
 
@@ -47,7 +49,26 @@ public class UserActivity extends Activity {
 
         setUserInfo();
 
-        // TODO: 07/07/2017 to complete
+        buttonModule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showModuleActivity();
+            }
+        });
+
+        buttonEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showUpdateActivity();
+            }
+        });
+
+        buttonDeleteProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDeleteAlertDialog();
+            }
+        });
 
     }
 
@@ -65,4 +86,37 @@ public class UserActivity extends Activity {
         String imageDownloadLink = Const.END_POINT + "/img/photos/" + imgName;
         Picasso.with(this).load(imageDownloadLink).into(circleImageView); //set profile image
     }
+
+    private void showModuleActivity() {
+        startActivity(new Intent(this, ModuleActivity.class));
+    }
+
+    private void showUpdateActivity() {
+        startActivity(new Intent(this, UpdateUserActivity.class));
+    }
+
+    private void showDeleteAlertDialog() {
+        final SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
+        dialog.setTitleText("Suppression profile");
+        dialog.setContentText(getString(R.string.confirm_delete));
+        dialog.setConfirmText(getString(R.string.delete));
+        dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sDialog) {
+                //deleteUser(user.getId(), tokenResponse.getToken());
+                sDialog.dismissWithAnimation();
+            }
+        });
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelText("Annuler");
+        dialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sDialog) {
+                sDialog.cancel();
+            }
+        });
+        dialog.show();
+    }
+
 }
