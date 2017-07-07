@@ -117,4 +117,68 @@ public class RetrofitUserService implements IUserService {
             }
         });
     }
+
+    @Override
+    public void delete(String token, int userId, final IServiceResultListener<String> iServiceResultListener) {
+
+        getRetrofitUserService().deleteUser(token, userId).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+
+                ServiceResult<String> result = new ServiceResult<String>();
+
+                if (response.isSuccessful()) {
+                    result.setData("Deleted");
+                } else {
+                    result.setErrorMsg("Erreur : Suppression");
+                }
+
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(result);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(new ServiceResult<String>(t.getMessage()));
+                }
+
+            }
+        });
+
+    }
+
+    @Override
+    public void update(String token, int userId, Map<String, String> updateUserMap, final IServiceResultListener<User> iServiceResultListener) {
+
+        getRetrofitUserService().updateUser(token, userId, updateUserMap).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+
+                ServiceResult<User> result = new ServiceResult<User>();
+
+                if (response.isSuccessful()) {
+
+                    result.setData(response.body());
+
+                } else {
+                    result.setErrorMsg("Mise à jour impossible");
+                }
+
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(result);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(new ServiceResult<User>(t.getMessage()));
+                }
+            }
+        });
+    }
 }

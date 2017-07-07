@@ -15,4 +15,8 @@ public interface IUserService {
 
     void register(Map<String, String> registerUserMap, IServiceResultListener<User> iServiceResultListener);
 
+    void delete(String token, int userId, IServiceResultListener<String> iServiceResultListener);
+
+    void update(String token, int userId, Map<String, String> updateUserMap, IServiceResultListener<User> iServiceResultListener);
+
 }

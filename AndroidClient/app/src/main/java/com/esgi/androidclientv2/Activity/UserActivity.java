@@ -7,10 +7,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.esgi.androidclientv2.Const;
 import com.esgi.androidclientv2.Model.TokenResponse;
 import com.esgi.androidclientv2.Model.User;
+import com.esgi.androidclientv2.Network.IServiceResultListener;
+import com.esgi.androidclientv2.Network.RetrofitUserService;
+import com.esgi.androidclientv2.Network.ServiceResult;
 import com.esgi.androidclientv2.R;
 import com.squareup.picasso.Picasso;
 
@@ -24,6 +28,7 @@ public class UserActivity extends Activity {
     private User user;
     private CircleImageView circleImageView;
     private Button buttonModule, buttonEditProfile, buttonDeleteProfile;
+    private RetrofitUserService retrofitUserService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +97,7 @@ public class UserActivity extends Activity {
     }
 
     private void showUpdateActivity() {
-        startActivity(new Intent(this, UpdateUserActivity.class));
+        startActivity(new Intent(this, UpdateUserActivity.class).putExtra("UserInfo",tokenResponse));
     }
 
     private void showDeleteAlertDialog() {
@@ -103,7 +108,7 @@ public class UserActivity extends Activity {
         dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sDialog) {
-                //deleteUser(user.getId(), tokenResponse.getToken());
+                deleteUser();
                 sDialog.dismissWithAnimation();
             }
         });
@@ -119,4 +124,32 @@ public class UserActivity extends Activity {
         dialog.show();
     }
 
+    private void deleteUser() {
+
+        if (tokenResponse != null) {
+
+            String token = tokenResponse.getToken();
+            final int userId = user.getId();
+
+            getRetrofitUserService().delete(token, userId, new IServiceResultListener<String>() {
+                @Override
+                public void onResult(ServiceResult<String> result) {
+
+                    if (result.getData() != null) {
+                        Toast.makeText(getBaseContext(), "Compte de " + user.getFirstName() + " a été bien supprimé", Toast.LENGTH_LONG).show();
+                        finish();
+                    } else {
+                        Toast.makeText(getBaseContext(), result.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+
+    public RetrofitUserService getRetrofitUserService() {
+        if (retrofitUserService == null) {
+            retrofitUserService = new RetrofitUserService();
+        }
+        return retrofitUserService;
+    }
 }

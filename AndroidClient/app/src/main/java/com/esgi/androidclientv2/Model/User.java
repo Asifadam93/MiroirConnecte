@@ -92,6 +92,7 @@ public class User implements Parcelable {
     }
 
     protected User(Parcel in) {
+        id = in.readInt();
         firstName = in.readString();
         lastName = in.readString();
         email = in.readString();
@@ -118,6 +119,7 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
         parcel.writeString(firstName);
         parcel.writeString(lastName);
         parcel.writeString(email);
