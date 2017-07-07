@@ -102,6 +102,13 @@ def add_widget_meteo(position_label, libelle, city, country):
 
     global images, fenetre_block_height, positions
 
+    #récupération de la position du widget
+    anchor_widget = convert_position(position_label)
+
+    # ajout du libellé du titre
+    widget_titre = Label(positions[position_label], text=libelle, fg="white", bg='#000000', font=('Arial', 20))
+    widget_titre.pack(pady=0, padx=0, anchor=anchor_widget)
+
     # récupération des données météo depuis l'apiWeather
     weather_data = apiWeather.get_actual_weather_with_city(city, country)
     weather_icon = apiWeather.weather_api_icon_converter(weather_data["weather"][0]["icon"])
@@ -111,13 +118,12 @@ def add_widget_meteo(position_label, libelle, city, country):
                     highlightbackground='#000000')
     # Ajout d'une image
     images.append(PhotoImage(file="./img/weather-icon/"+weather_icon))
-    canvas.create_image(0, 64, anchor=W, image=images[(len(images)-1)])
+    canvas.create_image(0, 54, anchor=W, image=images[(len(images)-1)])
 
-    # Ajout du texte
-    canvas.create_text(128, 44, text=str(weather_data["main"]["temp"])+"°", font="Arial 30", fill="white", anchor=W)
-    canvas.create_text(128, 74, text=str(weather_data["main"]["humidity"])+"%", font="Arial 15", fill="white", anchor=W)
-    canvas.create_text(128, 94, text=libelle, font="Arial 15", fill="white", anchor=W)
-    canvas.pack(anchor=convert_position(position_label))
+    # Ajout des textes pour la météo
+    canvas.create_text(128, 34, text=str(weather_data["main"]["temp"])+"°", font="Arial 30", fill="white", anchor=W)
+    canvas.create_text(128, 64, text=str(weather_data["main"]["humidity"])+"%", font="Arial 15", fill="white", anchor=W)
+    canvas.pack(anchor=anchor_widget)
 
     return canvas
 
@@ -150,32 +156,19 @@ def add_widget_time(position_label, libelle, module_timezone):
     '''
     global fenetre_block_height, positions
 
-    anchor_widget = NW
+    anchor_widget = convert_position(position_label)
 
-    if position_label == "NW":
-        anchor_widget = NW
-    elif position_label == "N":
-        anchor_widget = N
-    elif position_label == "NE":
-        anchor_widget = NE
-    elif position_label == "SW":
-        anchor_widget = SW
-    elif position_label == "S":
-        anchor_widget = S
-    elif position_label == "SE":
-        anchor_widget = SE
-
-    # test heure à Tahiti
+    # Création label indiquant le nom du widget
     widget_titre = Label(positions[position_label], text=libelle, fg="white", bg='#000000', font=('Arial', 20))
     widget_titre.pack(pady=0, padx=0, anchor=anchor_widget)
+
+    # Création du label indiquant l'heure
     widget_heure = Label(positions[position_label], text="test", fg="white", bg='#000000', font=('Arial', 50))
     widget_heure.pack(anchor=anchor_widget)
 
+    # lancement de la mise à jour de l'heure
     widget_heure.after(1000, lambda: update_widget_time(widget_heure, module_timezone))
 
     return widget_heure
-
-
-
 
 
