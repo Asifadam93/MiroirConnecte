@@ -6,7 +6,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 
 import com.esgi.androidclientv2.Model.Module;
 import com.esgi.androidclientv2.Model.TokenResponse;
@@ -36,7 +39,7 @@ public class ModuleActivity extends Activity {
             ibLeft, ibCenter, ibRight,
             ibBottomLeft, ibBottomCenter, ibBottomRight;
 
-    //private ImageButton [] imageButtons = new ImageButton[9];
+    private ImageButton[] imageButtons = new ImageButton[9];
 
     List<Module> moduleList;
 
@@ -53,7 +56,7 @@ public class ModuleActivity extends Activity {
         addIconDrawable = getDrawable(R.drawable.icons_add_50);
         attentionIconDrawable = getDrawable(R.drawable.icons_attention_50);
 
-        ibTopLeft = (ImageButton) findViewById(R.id.imageButton_top_left);
+        /*ibTopLeft = (ImageButton) findViewById(R.id.imageButton_top_left);
         ibTopCenter = (ImageButton) findViewById(R.id.imageButton_top_center);
         ibTopRight = (ImageButton) findViewById(R.id.imageButton_top_right);
         ibLeft = (ImageButton) findViewById(R.id.imageButton_left);
@@ -61,7 +64,33 @@ public class ModuleActivity extends Activity {
         ibRight = (ImageButton) findViewById(R.id.imageButton_right);
         ibBottomLeft = (ImageButton) findViewById(R.id.imageButton_bottom_left);
         ibBottomCenter = (ImageButton) findViewById(R.id.imageButton_bottom_center);
-        ibBottomRight = (ImageButton) findViewById(R.id.imageButton_bottom_right);
+        ibBottomRight = (ImageButton) findViewById(R.id.imageButton_bottom_right);*/
+
+
+        imageButtons[0] = (ImageButton) findViewById(R.id.imageButton_top_left);
+        imageButtons[1] = (ImageButton) findViewById(R.id.imageButton_top_center);
+        imageButtons[2] = (ImageButton) findViewById(R.id.imageButton_top_right);
+        imageButtons[3] = (ImageButton) findViewById(R.id.imageButton_left);
+        imageButtons[4] = (ImageButton) findViewById(R.id.imageButton_center);
+        imageButtons[5] = (ImageButton) findViewById(R.id.imageButton_right);
+        imageButtons[6] = (ImageButton) findViewById(R.id.imageButton_bottom_left);
+        imageButtons[7] = (ImageButton) findViewById(R.id.imageButton_bottom_center);
+        imageButtons[8] = (ImageButton) findViewById(R.id.imageButton_bottom_right);
+
+        setFakeModules();
+        setModule(moduleList);
+
+        // set click listener to image buttons
+        for (int i = 0; i < imageButtons.length; i++) {
+            final int index = i;
+            imageButtons[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i("ModuleActivity", "button clicked : "+index);
+                    showModuleDialog(imageButtons[index]);
+                }
+            });
+        }
 
 
         /*// get user token model from loginFragment
@@ -77,92 +106,138 @@ public class ModuleActivity extends Activity {
 
         //getUserModules();
 
-        setFakeModules();
+        //setFakeModules();
+        //setModule(moduleList);
 
-        ibTopLeft.setOnClickListener(new View.OnClickListener() {
+        /*ibTopLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(ModuleActivity.this);
-                View mView = getLayoutInflater().inflate(R.layout.dialog_add_edit_moules, null);
+            }
+        });*/
+    }
 
-                builder.setView(mView);
-                AlertDialog dialog = builder.create();
-                dialog.show();
+    private void showModuleDialog(ImageButton ib) {
+
+        Module module = (Module) ib.getTag();
+
+        if(module != null){
+            Log.i("ModuleActivity", "Dialog update/delete");
+        } else {
+            Log.i("ModuleActivity", "Dialog add");
+            showAddModuleDialog();
+        }
+    }
+
+    private void showAddModuleDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ModuleActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_add_edit_moules, null);
+
+        //init views
+        RadioButton rbTime = (RadioButton)  mView.findViewById(R.id.module_radio_button_time);
+        RadioButton rbWeather = (RadioButton)  mView.findViewById(R.id.module_radio_button_weather);
+
+        final LinearLayout lLayoutWeather = (LinearLayout) mView.findViewById(R.id.linearLayoutWeather);
+        final EditText etTimeZone = (EditText) mView.findViewById(R.id.module_time_zone);
+
+        rbTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                etTimeZone.setVisibility(View.VISIBLE);
+                lLayoutWeather.setVisibility(View.GONE);
             }
         });
 
+        rbWeather.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                etTimeZone.setVisibility(View.GONE);
+                lLayoutWeather.setVisibility(View.VISIBLE);
+            }
+        });
+
+        builder.setView(mView);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void addTimeModule(){
 
     }
 
     private void setFakeModules() {
         moduleList = new ArrayList<>();
-        moduleList.add(new Module(3, "time", "Heure à Tahiti", left, "Europe/Paris", null, null));
-        moduleList.add(new Module(4, "weather", "Météo à paris", center, null, "Paris", "fr"));
-        moduleList.add(new Module(5, "time", "Heure en inde", right, "India/Chennai", null, null));
-        moduleList.add(new Module(3, "time", "Heure à Tahiti", topCenter, "Europe/Paris", null, null));
         moduleList.add(new Module(4, "weather", "Météo à paris", topLeft, null, "Paris", "fr"));
-        moduleList.add(new Module(4, "weather", "Météo à paris", bottomLeft, null, "Paris", "fr"));
-        moduleList.add(new Module(5, "time", "Heure en inde", bottomCenter, "India/Chennai", null, null));
+        moduleList.add(new Module(5, "time", "Heure en inde", center, "India/Chennai", null, null));
         moduleList.add(new Module(5, "time", "Heure en inde", bottomRight, "India/Chennai", null, null));
-        setModule(moduleList);
     }
 
     private void setModule(List<Module> moduleList) {
 
-        for (Module module : moduleList) {
-            Log.i("ModuleActivity", "Module : " + module.toString());
+        if (moduleList != null) {
+            for (Module module : moduleList) {
+                Log.i("ModuleActivity", "Module : " + module.toString());
 
-            switch (module.getPosition()) {
+                switch (module.getPosition()) {
 
-                case topLeft:
-                    setModuleView(ibTopLeft, module.getType());
-                    break;
+                    case topLeft:
+                        setModuleView(imageButtons[0], module);
+                        break;
 
-                case topCenter:
-                    setModuleView(ibTopCenter, module.getType());
-                    break;
+                    case topCenter:
+                        setModuleView(imageButtons[1], module);
+                        break;
 
-                case topRight:
-                    setModuleView(ibTopRight, module.getType());
-                    break;
+                    case topRight:
+                        setModuleView(imageButtons[2], module);
+                        break;
 
-                case left:
-                    setModuleView(ibLeft, module.getType());
-                    break;
+                    case left:
+                        setModuleView(imageButtons[3], module);
+                        break;
 
-                case center:
-                    setModuleView(ibCenter, module.getType());
-                    break;
+                    case center:
+                        setModuleView(imageButtons[4], module);
+                        break;
 
-                case right:
-                    setModuleView(ibRight, module.getType());
-                    break;
+                    case right:
+                        setModuleView(imageButtons[5], module);
+                        break;
 
-                case bottomLeft:
-                    setModuleView(ibBottomLeft, module.getType());
-                    break;
+                    case bottomLeft:
+                        setModuleView(imageButtons[6], module);
+                        break;
 
-                case bottomCenter:
-                    setModuleView(ibBottomCenter, module.getType());
-                    break;
+                    case bottomCenter:
+                        setModuleView(imageButtons[7], module);
+                        break;
 
-                case bottomRight:
-                    setModuleView(ibBottomRight, module.getType());
-                    break;
+                    case bottomRight:
+                        setModuleView(imageButtons[8], module);
+                        break;
 
+                }
             }
         }
     }
 
-    private void setModuleView(ImageButton ibPosition, String type) {
-        if (type.equals(timeModule)) {
-            ibPosition.setBackground(timeIconDrawable);
-        } else if (type.equals(weatherModule)) {
-            ibPosition.setBackground(weatherIconDrawable);
-        } else {
-            ibPosition.setBackground(attentionIconDrawable);
+    private void setModuleView(ImageButton ibPosition, Module module) {
+
+        String modulePosition = module.getPosition();
+
+        switch (modulePosition) {
+            case timeModule:
+                ibPosition.setBackground(timeIconDrawable);
+                break;
+            case weatherModule:
+                ibPosition.setBackground(weatherIconDrawable);
+                break;
+            default:
+                ibPosition.setBackground(attentionIconDrawable);
+                break;
         }
+
+        ibPosition.setTag(module);
     }
 
     private void getUserModules() {
