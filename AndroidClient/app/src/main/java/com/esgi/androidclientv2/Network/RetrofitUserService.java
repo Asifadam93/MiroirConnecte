@@ -2,13 +2,12 @@ package com.esgi.androidclientv2.Network;
 
 import android.util.Log;
 
-import com.esgi.androidclientv2.Model.Module;
 import com.esgi.androidclientv2.Model.TokenResponse;
 import com.esgi.androidclientv2.Model.User;
 
-import java.util.List;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -211,5 +210,38 @@ public class RetrofitUserService implements IUserService {
                 }
             }
         });
+    }
+
+    @Override
+    public void addTimeModule(String token, int userId, Map<String, String> timeModuleMap,
+                              final IServiceResultListener<ResponseBody> iServiceResultListener) {
+
+        getRetrofitUserService().addTimeModule(token, userId, timeModuleMap)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        ServiceResult<ResponseBody> result = new ServiceResult<>();
+
+                        if (response.isSuccessful()) {
+                            result.setData(response.body());
+                        } else {
+                            result.setErrorMsg("Erreur : Ajout module");
+                        }
+
+                        if (iServiceResultListener != null) {
+                            iServiceResultListener.onResult(result);
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        if (iServiceResultListener != null) {
+                            iServiceResultListener.onResult(new ServiceResult<ResponseBody>(t.getMessage()));
+                        }
+                    }
+                });
+
     }
 }

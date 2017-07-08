@@ -1,12 +1,11 @@
 package com.esgi.androidclientv2.Network;
 
-import com.esgi.androidclientv2.Model.Module;
 import com.esgi.androidclientv2.Model.TokenResponse;
 import com.esgi.androidclientv2.Model.User;
 
-import java.util.List;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -45,5 +44,12 @@ public interface IRetrofitUserService {
     Call<User> getUserModules(
             @Header("X-Auth-Token") String userToken,
             @Path("id") int id
+    );
+
+    @POST("/user/{id}/time")
+    Call<ResponseBody> addTimeModule(
+            @Header("X-Auth-Token") String userToken,
+            @Path("id") int id,
+            @Body Map<String, String> timeModuleMap
     );
 }

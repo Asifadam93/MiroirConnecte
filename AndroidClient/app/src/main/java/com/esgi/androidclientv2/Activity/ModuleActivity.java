@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.esgi.androidclientv2.Model.Module;
 import com.esgi.androidclientv2.Model.TokenResponse;
@@ -21,12 +24,15 @@ import com.esgi.androidclientv2.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import okhttp3.ResponseBody;
 
 public class ModuleActivity extends Activity {
 
-    private final static String topLeft = "topLeft", topCenter = "topCenter", topRight = "topRight",
+    private final static String topLeft = "top_left", topCenter = "top_center", topRight = "top_right",
             left = "left", center = "center", right = "right",
-            bottomLeft = "bottomLeft", bottomCenter = "bottomCenter", bottomRight = "bottomRight",
+            bottomLeft = "bottom_left", bottomCenter = "bottom_center", bottomRight = "bottom_right",
             timeModule = "time", weatherModule = "weather";
 
     private RetrofitUserService retrofitUserService;
@@ -42,6 +48,8 @@ public class ModuleActivity extends Activity {
     private ImageButton[] imageButtons = new ImageButton[9];
 
     List<Module> moduleList;
+
+    private int positionActuel = -1;
 
     private Drawable timeIconDrawable, weatherIconDrawable, addIconDrawable,
             attentionIconDrawable;
@@ -77,8 +85,8 @@ public class ModuleActivity extends Activity {
         imageButtons[7] = (ImageButton) findViewById(R.id.imageButton_bottom_center);
         imageButtons[8] = (ImageButton) findViewById(R.id.imageButton_bottom_right);
 
-        setFakeModules();
-        setModule(moduleList);
+        //setFakeModules();
+        getUserModules();
 
         // set click listener to image buttons
         for (int i = 0; i < imageButtons.length; i++) {
@@ -86,8 +94,9 @@ public class ModuleActivity extends Activity {
             imageButtons[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.i("ModuleActivity", "button clicked : "+index);
+                    Log.i("ModuleActivity", "button clicked : " + index);
                     showModuleDialog(imageButtons[index]);
+                    positionActuel = index; // save clicked position
                 }
             });
         }
@@ -104,7 +113,7 @@ public class ModuleActivity extends Activity {
             return;
         }*/
 
-        //getUserModules();
+        //
 
         //setFakeModules();
         //setModule(moduleList);
@@ -117,64 +126,28 @@ public class ModuleActivity extends Activity {
         });*/
     }
 
-    private void showModuleDialog(ImageButton ib) {
+    private void getUserModules() {
 
-        Module module = (Module) ib.getTag();
-
-        if(module != null){
-            Log.i("ModuleActivity", "Dialog update/delete");
-        } else {
-            Log.i("ModuleActivity", "Dialog add");
-            showAddModuleDialog();
-        }
-    }
-
-    private void showAddModuleDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ModuleActivity.this);
-        View mView = getLayoutInflater().inflate(R.layout.dialog_add_edit_moules, null);
-
-        //init views
-        RadioButton rbTime = (RadioButton)  mView.findViewById(R.id.module_radio_button_time);
-        RadioButton rbWeather = (RadioButton)  mView.findViewById(R.id.module_radio_button_weather);
-
-        final LinearLayout lLayoutWeather = (LinearLayout) mView.findViewById(R.id.linearLayoutWeather);
-        final EditText etTimeZone = (EditText) mView.findViewById(R.id.module_time_zone);
-
-        rbTime.setOnClickListener(new View.OnClickListener() {
+        getRetrofitUserService().getUserModules(tmpToken, tmpUserId, new IServiceResultListener<User>() {
             @Override
-            public void onClick(View view) {
-                etTimeZone.setVisibility(View.VISIBLE);
-                lLayoutWeather.setVisibility(View.GONE);
+            public void onResult(ServiceResult<User> result) {
+
+                moduleList = result.getData().getModules();
+
+                if (moduleList != null) {
+                    setModule(moduleList);
+                    Toast.makeText(getBaseContext(), "Initialisation terminé", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getBaseContext(), result.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-        rbWeather.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                etTimeZone.setVisibility(View.GONE);
-                lLayoutWeather.setVisibility(View.VISIBLE);
-            }
-        });
-
-        builder.setView(mView);
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void addTimeModule(){
-
-    }
-
-    private void setFakeModules() {
-        moduleList = new ArrayList<>();
-        moduleList.add(new Module(4, "weather", "Météo à paris", topLeft, null, "Paris", "fr"));
-        moduleList.add(new Module(5, "time", "Heure en inde", center, "India/Chennai", null, null));
-        moduleList.add(new Module(5, "time", "Heure en inde", bottomRight, "India/Chennai", null, null));
     }
 
     private void setModule(List<Module> moduleList) {
 
         if (moduleList != null) {
+
             for (Module module : moduleList) {
                 Log.i("ModuleActivity", "Module : " + module.toString());
 
@@ -223,9 +196,9 @@ public class ModuleActivity extends Activity {
 
     private void setModuleView(ImageButton ibPosition, Module module) {
 
-        String modulePosition = module.getPosition();
+        String moduleType = module.getType();
 
-        switch (modulePosition) {
+        switch (moduleType) {
             case timeModule:
                 ibPosition.setBackground(timeIconDrawable);
                 break;
@@ -240,28 +213,139 @@ public class ModuleActivity extends Activity {
         ibPosition.setTag(module);
     }
 
-    private void getUserModules() {
+    private void showModuleDialog(ImageButton ib) {
 
-        getRetrofitUserService().getUserModules(tmpToken, tmpUserId, new IServiceResultListener<User>() {
+        Module module = (Module) ib.getTag();
+
+        if (module != null) {
+            Log.i("ModuleActivity", "Dialog update/delete");
+        } else {
+            Log.i("ModuleActivity", "Dialog add");
+            showAddModuleDialog();
+        }
+    }
+
+    private void showAddModuleDialog() {
+
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(ModuleActivity.this);
+        final View mView = getLayoutInflater().inflate(R.layout.dialog_add_edit_moules, null);
+
+        //init views
+        final RadioButton rbTime = (RadioButton) mView.findViewById(R.id.module_radio_button_time);
+        final RadioButton rbWeather = (RadioButton) mView.findViewById(R.id.module_radio_button_weather);
+
+        final LinearLayout lLayoutWeather = (LinearLayout) mView.findViewById(R.id.linearLayoutWeather);
+        final EditText etTimeZone = (EditText) mView.findViewById(R.id.module_time_zone);
+        Button buttonSave = (Button) mView.findViewById(R.id.module_button_save);
+
+        builder.setView(mView);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        rbTime.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResult(ServiceResult<User> result) {
+            public void onClick(View view) {
+                etTimeZone.setVisibility(View.VISIBLE);
+                lLayoutWeather.setVisibility(View.GONE);
+            }
+        });
 
-                List<Module> moduleList = result.getData().getModules();
+        rbWeather.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                etTimeZone.setVisibility(View.GONE);
+                lLayoutWeather.setVisibility(View.VISIBLE);
+            }
+        });
 
-                if (moduleList != null) {
-                    //sortModules(moduleList);
-                } else {
-                    Log.i("ModuleActivity", result.getErrorMsg());
+        // add module to user
+        buttonSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // add time module
+                if (rbTime.isChecked()) {
+
+                    EditText etDesc = (EditText) mView.findViewById(R.id.module_description);
+                    EditText etTimeZone = (EditText) mView.findViewById(R.id.module_time_zone);
+
+                    Map<String, String> timeMap = new ArrayMap<String, String>();
+
+                    timeMap.put("name", etDesc.getText().toString());
+                    timeMap.put("position", getPosition());
+                    timeMap.put("timeZone", etTimeZone.getText().toString());
+
+                    addTimeModule(timeMap);
+
+                } else if (rbWeather.isChecked()) {
+                    // add weather module
+
                 }
+
+                dialog.cancel();
             }
         });
     }
 
-    private void sortModules(List<Module> moduleList) {
+    private String getPosition() {
 
+        switch (positionActuel) {
+            case 0:
+                return topLeft;
 
+            case 1:
+                return topCenter;
+
+            case 2:
+                return topRight;
+
+            case 3:
+                return left;
+
+            case 4:
+                return center;
+
+            case 5:
+                return right;
+
+            case 6:
+                return bottomLeft;
+
+            case 7:
+                return bottomCenter;
+
+            case 8:
+                return bottomRight;
+
+        }
+        return "Position error";
     }
 
+    private void addTimeModule(Map<String, String> timeMap) {
+
+        getRetrofitUserService().addTimeModule(tmpToken, tmpUserId, timeMap,
+                new IServiceResultListener<ResponseBody>() {
+                    @Override
+                    public void onResult(ServiceResult<ResponseBody> result) {
+
+                        if (result.getData() != null) {
+                            Toast.makeText(getBaseContext(), "Module à été bien sauvgardé", Toast.LENGTH_SHORT).show();
+                            getUserModules();
+                        } else {
+                            Toast.makeText(getBaseContext(), result.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+    }
+
+    private void setFakeModules() {
+        moduleList = new ArrayList<>();
+        moduleList.add(new Module(4, "weather", "Météo à paris", topLeft, null, "Paris", "fr"));
+        moduleList.add(new Module(5, "time", "Heure en inde", center, "India/Chennai", null, null));
+        moduleList.add(new Module(5, "time", "Heure en inde", bottomRight, "India/Chennai", null, null));
+    }
 
     public RetrofitUserService getRetrofitUserService() {
         if (retrofitUserService == null) {
