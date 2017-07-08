@@ -2,9 +2,11 @@ package com.esgi.androidclientv2.Network;
 
 import android.util.Log;
 
+import com.esgi.androidclientv2.Model.Module;
 import com.esgi.androidclientv2.Model.TokenResponse;
 import com.esgi.androidclientv2.Model.User;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -183,18 +185,18 @@ public class RetrofitUserService implements IUserService {
     }
 
     @Override
-    public void getUser(String token, int userId, final IServiceResultListener<User> iServiceResultListener) {
+    public void getUserModules(String token, int userId, final IServiceResultListener<User> iServiceResultListener) {
 
-        getRetrofitUserService().getUser(token, userId).enqueue(new Callback<User>() {
+        getRetrofitUserService().getUserModules(token, userId).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
 
-                ServiceResult<User> result = new ServiceResult<User>();
+                ServiceResult<User> result = new ServiceResult<>();
 
                 if (response.isSuccessful()) {
                     result.setData(response.body());
                 } else {
-                    result.setErrorMsg("Erreur : Chargement profil utilisateur");
+                    result.setErrorMsg("Erreur : Chargement module utilisateur");
                 }
 
                 if (iServiceResultListener != null) {
@@ -209,6 +211,5 @@ public class RetrofitUserService implements IUserService {
                 }
             }
         });
-
     }
 }

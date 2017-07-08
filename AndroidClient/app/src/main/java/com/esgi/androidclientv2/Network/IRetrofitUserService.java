@@ -1,8 +1,10 @@
 package com.esgi.androidclientv2.Network;
 
+import com.esgi.androidclientv2.Model.Module;
 import com.esgi.androidclientv2.Model.TokenResponse;
 import com.esgi.androidclientv2.Model.User;
 
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -40,7 +42,7 @@ public interface IRetrofitUserService {
     );
 
     @GET("/user/{id}")
-    Call<User> getUser(
+    Call<User> getUserModules(
             @Header("X-Auth-Token") String userToken,
             @Path("id") int id
     );

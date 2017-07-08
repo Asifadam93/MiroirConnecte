@@ -73,6 +73,16 @@ public class Module implements Parcelable {
                 '}';
     }
 
+    public Module(Integer id, String type, String name, String position, String timeZone, String cityName, String countryCode) {
+        this.id = id;
+        this.type = type;
+        this.name = name;
+        this.position = position;
+        this.timeZone = timeZone;
+        this.cityName = cityName;
+        this.countryCode = countryCode;
+    }
+
     protected Module(Parcel in) {
         type = in.readString();
         name = in.readString();

@@ -1,8 +1,10 @@
 package com.esgi.androidclientv2.Network;
 
+import com.esgi.androidclientv2.Model.Module;
 import com.esgi.androidclientv2.Model.TokenResponse;
 import com.esgi.androidclientv2.Model.User;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,6 +21,6 @@ public interface IUserService {
 
     void update(String token, int userId, Map<String, String> updateUserMap, IServiceResultListener<User> iServiceResultListener);
 
-    void getUser(String token, int userId, IServiceResultListener<User> iServiceResultListener);
+    void getUserModules(String token, int userId, IServiceResultListener<User> iServiceResultListener);
 
 }

@@ -60,9 +60,9 @@ public class User implements Parcelable {
         return photoName;
     }
 
-    /*public List<Module> getModules() {
+    public List<Module> getModules() {
         return modules;
-    }*/
+    }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;

@@ -41,6 +41,7 @@ public class UserActivity extends Activity {
             tokenResponse = intent.getParcelableExtra("UserInfo");
             user = tokenResponse.getUser();
             Log.i("UserActivity", "Token : " + tokenResponse.getToken()); // test
+            Log.i("UserActivity", "Id : " + user.getId()); // test
         } else {
             Log.i("UserActivity", "Error data transmission");
             return;
@@ -93,7 +94,7 @@ public class UserActivity extends Activity {
     }
 
     private void showModuleActivity() {
-        startActivity(new Intent(this, ModuleActivity.class));
+        startActivity(new Intent(this, ModuleActivity.class).putExtra("UserInfo",tokenResponse));
     }
 
     private void showUpdateActivity() {
