@@ -1,6 +1,7 @@
 package com.esgi.androidclientv2.Activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,8 @@ public class ModuleActivity extends Activity {
     private ImageButton ibTopLeft, ibTopCenter, ibTopRight,
             ibLeft, ibCenter, ibRight,
             ibBottomLeft, ibBottomCenter, ibBottomRight;
+
+    //private ImageButton [] imageButtons = new ImageButton[9];
 
     List<Module> moduleList;
 
@@ -80,22 +83,25 @@ public class ModuleActivity extends Activity {
             @Override
             public void onClick(View view) {
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(ModuleActivity.this);
+                View mView = getLayoutInflater().inflate(R.layout.dialog_add_edit_moules, null);
 
-
+                builder.setView(mView);
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
 
-
     }
 
-    private void setFakeModules(){
+    private void setFakeModules() {
         moduleList = new ArrayList<>();
         moduleList.add(new Module(3, "time", "Heure à Tahiti", left, "Europe/Paris", null, null));
         moduleList.add(new Module(4, "weather", "Météo à paris", center, null, "Paris", "fr"));
-        moduleList.add(new Module(5, "tme", "Heure en inde", right, "India/Chennai", null, null));
+        moduleList.add(new Module(5, "time", "Heure en inde", right, "India/Chennai", null, null));
         moduleList.add(new Module(3, "time", "Heure à Tahiti", topCenter, "Europe/Paris", null, null));
-        moduleList.add(new Module(4, "weathe", "Météo à paris", topLeft, null, "Paris", "fr"));
+        moduleList.add(new Module(4, "weather", "Météo à paris", topLeft, null, "Paris", "fr"));
         moduleList.add(new Module(4, "weather", "Météo à paris", bottomLeft, null, "Paris", "fr"));
         moduleList.add(new Module(5, "time", "Heure en inde", bottomCenter, "India/Chennai", null, null));
         moduleList.add(new Module(5, "time", "Heure en inde", bottomRight, "India/Chennai", null, null));
