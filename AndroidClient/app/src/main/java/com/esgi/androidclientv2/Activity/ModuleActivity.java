@@ -8,6 +8,8 @@ import com.esgi.androidclientv2.R;
 
 public class ModuleActivity extends Activity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -26,7 +26,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.ModuleActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         <activity
             android:name=".Activity.UpdateUserActivity"
             android:screenOrientation="portrait" />

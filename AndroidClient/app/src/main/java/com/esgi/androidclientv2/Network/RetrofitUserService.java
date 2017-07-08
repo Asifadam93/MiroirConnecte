@@ -183,9 +183,32 @@ public class RetrofitUserService implements IUserService {
     }
 
     @Override
-    public void getUser(String token, int userId, IServiceResultListener<User> iServiceResultListener) {
+    public void getUser(String token, int userId, final IServiceResultListener<User> iServiceResultListener) {
 
-        
+        getRetrofitUserService().getUser(token, userId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+
+                ServiceResult<User> result = new ServiceResult<User>();
+
+                if (response.isSuccessful()) {
+                    result.setData(response.body());
+                } else {
+                    result.setErrorMsg("Erreur : Chargement profil utilisateur");
+                }
+
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(result);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(new ServiceResult<User>(t.getMessage()));
+                }
+            }
+        });
 
     }
 }

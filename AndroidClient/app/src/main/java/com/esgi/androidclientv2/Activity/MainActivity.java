@@ -1,6 +1,7 @@
 package com.esgi.androidclientv2.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -13,7 +14,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        showLoginFragment();
+        //showLoginFragment();
+        // TODO: 08/07/2017 undo
+        showModuleActivity();
     }
 
     private void showLoginFragment() {
@@ -23,5 +26,9 @@ public class MainActivity extends Activity {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+    }
+
+    private void showModuleActivity() {
+        startActivity(new Intent(this, ModuleActivity.class));
     }
 }
