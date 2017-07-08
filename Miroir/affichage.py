@@ -65,7 +65,9 @@ positions = {
     "bottom":       cellules[7],
     "bottom_right": cellules[8]
 }
-
+# Création d'un label d'information
+widget_information = Label(positions["center"], text="", fg="white", bg='#000000', font=('Arial', 20))
+widget_information.pack(pady=0, padx=0, anchor=N)
 
 def convert_position(libelle_position="top"):
     if libelle_position == "top_left":

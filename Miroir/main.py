@@ -1,8 +1,36 @@
 import affichage
 import apiMirror
+from gpiozero import Button
+import time
+import camera
+
+# Définition des boutons qu'on utilisera
+button_1 = Button(17)
+button_2 = Button(27)
+
+#
+def button_1_pressed():
+    affichage.widget_information.config(text="Prise d'une photo dans 5s")
+    compteur = 5
+    while compteur >= 0:
+        time.sleep(1)
+        affichage.widget_information.config(text=str(compteur))
+        compteur -= 1
+    camera.take_picture()
+    affichage.widget_information.config(text=str("Photo prise"))
+
+#
+def button_2_pressed():
+    affichage.widget_information.config(text="Bouton 2")
+
+#
+button_1.when_pressed = button_1_pressed
+button_2.when_pressed = button_2_pressed
 
 # Récupération de tout les utilisateurs (et téléchargement de leurs photos si elles ne sont pas déjà présentes)
 users = apiMirror.get_users()
+
+
 
 # Récupération d'un seul utilisateur
 userIdentifie = apiMirror.get_user(1)
