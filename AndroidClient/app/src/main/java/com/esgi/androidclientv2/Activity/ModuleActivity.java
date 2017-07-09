@@ -2,6 +2,7 @@ package com.esgi.androidclientv2.Activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.ArrayMap;
@@ -37,14 +38,8 @@ public class ModuleActivity extends Activity {
             timeModule = "time", weatherModule = "weather";
 
     private RetrofitUserService retrofitUserService;
-    private TokenResponse tokenResponse;
-    private User user;
-    private final static String tmpToken = "Pg4kPuM8X80Davn+yMdNnAi5kxCQZxmpdsw4f98DkPfFGZatrUw5mqamhGiK9dHXNuY=";
-    private final static int tmpUserId = 10;
-
-    private ImageButton ibTopLeft, ibTopCenter, ibTopRight,
-            ibLeft, ibCenter, ibRight,
-            ibBottomLeft, ibBottomCenter, ibBottomRight;
+    private static String tmpToken;
+    private static int tmpUserId;
 
     private ImageButton[] imageButtons = new ImageButton[9];
 
@@ -60,6 +55,18 @@ public class ModuleActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module);
+
+        // get user token model from loginFragment
+        Intent intent = getIntent();
+        if (intent != null) {
+            TokenResponse tokenResponse = intent.getParcelableExtra("UserInfo");
+            tmpToken = tokenResponse.getToken();
+            tmpUserId = tokenResponse.getUser().getId();
+            Log.i("UserActivity", "Token : " + tokenResponse.getToken()); // test
+        } else {
+            Toast.makeText(this, "Error data transmission", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         timeIconDrawable = getDrawable(R.drawable.icons_time_50);
         weatherIconDrawable = getDrawable(R.drawable.icons_weather_50);
@@ -90,17 +97,6 @@ public class ModuleActivity extends Activity {
                 }
             });
         }
-
-        /*// get user token model from loginFragment
-        Intent intent = getIntent();
-        if (intent != null) {
-            tokenResponse = intent.getParcelableExtra("UserInfo");
-            user = tokenResponse.getUserModules();
-            Log.i("UserActivity", "Token : " + tokenResponse.getToken()); // test
-        } else {
-            Log.i("UserActivity", "Error data transmission");
-            return;
-        }*/
     }
 
     private void getUserModules() {
@@ -276,27 +272,59 @@ public class ModuleActivity extends Activity {
             @Override
             public void onClick(View view) {
 
+                String desc = etDesc.getText().toString();
+
                 switch (module.getType()) {
 
                     case timeModule:
 
+                        String timeZone = etTimeZone.getText().toString();
+
+                        if (desc.isEmpty()) {
+                            etDesc.setError(getString(R.string.champ_vide));
+                            return;
+                        }
+
+                        if (timeZone.isEmpty()) {
+                            etTimeZone.setError(getString(R.string.champ_vide));
+                            return;
+                        }
+
                         Map<String, String> timeMap = new ArrayMap<String, String>();
 
-                        timeMap.put("name", etDesc.getText().toString());
+                        timeMap.put("name", desc);
                         timeMap.put("position", getPosition());
-                        timeMap.put("timeZone", etTimeZone.getText().toString());
+                        timeMap.put("timeZone", timeZone);
 
                         updateTimeModule(timeMap);
                         break;
 
                     case weatherModule:
 
+                        String city = etCity.getText().toString();
+                        String country = etCountry.getText().toString();
+
+                        if (desc.isEmpty()) {
+                            etDesc.setError(getString(R.string.champ_vide));
+                            return;
+                        }
+
+                        if (city.isEmpty()) {
+                            etCity.setError(getString(R.string.champ_vide));
+                            return;
+                        }
+
+                        if (country.isEmpty()) {
+                            etCountry.setError(getString(R.string.champ_vide));
+                            return;
+                        }
+
                         Map<String, String> weatherMap = new ArrayMap<String, String>();
 
-                        weatherMap.put("name", etDesc.getText().toString());
+                        weatherMap.put("name", desc);
                         weatherMap.put("position", getPosition());
-                        weatherMap.put("city", etCity.getText().toString());
-                        weatherMap.put("country", etCountry.getText().toString());
+                        weatherMap.put("city", city);
+                        weatherMap.put("country", country);
 
                         updateWeatherModule(weatherMap);
                         break;
@@ -322,8 +350,6 @@ public class ModuleActivity extends Activity {
                 dialog.cancel();
             }
         });
-
-
     }
 
     private String getModuleTranslatedName(Module module) {
@@ -376,11 +402,23 @@ public class ModuleActivity extends Activity {
             public void onClick(View view) {
 
                 EditText etDesc = (EditText) mView.findViewById(R.id.module_description);
+                String desc = etDesc.getText().toString();
 
                 // add time module
                 if (rbTime.isChecked()) {
 
                     EditText etTimeZone = (EditText) mView.findViewById(R.id.module_time_zone);
+                    String timeZone = etTimeZone.getText().toString();
+
+                    if (desc.isEmpty()) {
+                        etDesc.setError(getString(R.string.champ_vide));
+                        return;
+                    }
+
+                    if (timeZone.isEmpty()) {
+                        etTimeZone.setError(getString(R.string.champ_vide));
+                        return;
+                    }
 
                     Map<String, String> timeMap = new ArrayMap<String, String>();
 
@@ -395,6 +433,24 @@ public class ModuleActivity extends Activity {
                     EditText etCity = (EditText) mView.findViewById(R.id.module_city);
                     EditText etCountry = (EditText) mView.findViewById(R.id.module_country);
 
+                    String city = etCity.getText().toString();
+                    String country = etCountry.getText().toString();
+
+                    if (desc.isEmpty()) {
+                        etDesc.setError(getString(R.string.champ_vide));
+                        return;
+                    }
+
+                    if (city.isEmpty()) {
+                        etCity.setError(getString(R.string.champ_vide));
+                        return;
+                    }
+
+                    if (country.isEmpty()) {
+                        etCountry.setError(getString(R.string.champ_vide));
+                        return;
+                    }
+
                     Map<String, String> weatherMap = new ArrayMap<String, String>();
 
                     weatherMap.put("name", etDesc.getText().toString());
@@ -408,40 +464,6 @@ public class ModuleActivity extends Activity {
                 dialog.cancel();
             }
         });
-    }
-
-    private String getPosition() {
-
-        switch (positionActuel) {
-            case 0:
-                return topLeft;
-
-            case 1:
-                return topCenter;
-
-            case 2:
-                return topRight;
-
-            case 3:
-                return left;
-
-            case 4:
-                return center;
-
-            case 5:
-                return right;
-
-            case 6:
-                return bottomLeft;
-
-            case 7:
-                return bottomCenter;
-
-            case 8:
-                return bottomRight;
-
-        }
-        return "Position error";
     }
 
     private void addTimeModule(Map<String, String> timeMap) {
@@ -544,7 +566,6 @@ public class ModuleActivity extends Activity {
                 }
             }
         });
-
     }
 
     public RetrofitUserService getRetrofitUserService() {
@@ -552,5 +573,39 @@ public class ModuleActivity extends Activity {
             retrofitUserService = new RetrofitUserService();
         }
         return retrofitUserService;
+    }
+
+    private String getPosition() {
+
+        switch (positionActuel) {
+            case 0:
+                return topLeft;
+
+            case 1:
+                return topCenter;
+
+            case 2:
+                return topRight;
+
+            case 3:
+                return left;
+
+            case 4:
+                return center;
+
+            case 5:
+                return right;
+
+            case 6:
+                return bottomLeft;
+
+            case 7:
+                return bottomCenter;
+
+            case 8:
+                return bottomRight;
+
+        }
+        return "Position error";
     }
 }

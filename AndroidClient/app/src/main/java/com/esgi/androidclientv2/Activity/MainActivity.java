@@ -14,9 +14,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //showLoginFragment();
-        // TODO: 08/07/2017 undo
-        showModuleActivity();
+        showLoginFragment();
     }
 
     private void showLoginFragment() {
@@ -25,6 +23,7 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+        // disable back button
         //super.onBackPressed();
     }
 
