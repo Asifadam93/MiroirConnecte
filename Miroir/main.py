@@ -10,14 +10,17 @@ button_2 = Button(27)
 
 #
 def button_1_pressed():
-    affichage.widget_information.config(text="Prise d'une photo dans 5s")
+    camera.start_preview(int((affichage.fenetre_center_left )-320), int((affichage.fenetre_block_height +60)))
+
     compteur = 5
     while compteur >= 0:
-        time.sleep(1)
-        affichage.widget_information.config(text=str(compteur))
+        affichage.widget_information.config(text="Prise d'une photo dans " + str(compteur) + " seconde(s)")
         compteur -= 1
-    camera.take_picture()
-    affichage.widget_information.config(text=str("Photo prise"))
+        time.sleep(1)
+    chemin_photo = camera.take_picture()
+    affichage.widget_information.config(text=str("Photo prise, envoie de la photo au serveur"))
+    code_photo = apiMirror.post_photo(chemin_photo)
+    affichage.widget_information.config(text="Votre code photo : "+str(code_photo))
 
 #
 def button_2_pressed():

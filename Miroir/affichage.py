@@ -9,19 +9,20 @@ import apiWeather
 
 fenetre = Tk()
 fenetre.configure(bg="#000000", pady=20, padx=20)
+fenetre.attributes("-fullscreen", True)
 
 # définitions des variables destinée à la taille des frames
 fenetre.attributes("-fullscreen", True)
-fenetre_block_width = ((fenetre.winfo_screenwidth() - 40) / 3)
-fenetre_block_height = ((fenetre.winfo_screenheight() -40) / 3)
-fenetre_block_center_x = (fenetre_block_width /2)
-fenetre_block_center_y = (fenetre_block_height /2)
+fenetre_block_width = int((fenetre.winfo_screenwidth() - 40) / 3)
+fenetre_block_height = int((fenetre.winfo_screenheight() -40) / 3)
+fenetre_block_center_x = int(fenetre_block_width /2)
+fenetre_block_center_y = int(fenetre_block_height /2)
+
+# définition des variables permettant de connaitre la position centrale de la fenetre
+fenetre_center_left = int(fenetre.winfo_screenwidth() /2)
+fenetre_center_top = int(fenetre.winfo_screenheight() /2)
 
 
-# définitions des variables destinée à la taille des frames
-fenetre.attributes("-fullscreen", True)
-fenetre_block_width = ((fenetre.winfo_screenwidth() - 40) / 3)
-fenetre_block_height = ((fenetre.winfo_screenheight() -40) / 3)
 
 # les cellules
 cellules = []
