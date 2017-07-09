@@ -155,7 +155,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/user_delete_profil"
+                android:id="@+id/module_button_delete"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -165,7 +165,8 @@
                 android:backgroundTint="@color/red"
                 android:text="Supprimer"
                 android:textSize="17sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -244,4 +244,35 @@ public class RetrofitUserService implements IUserService {
                 });
 
     }
+
+    @Override
+    public void deleteTimeModule(String token, int userId, int moduleId, final IServiceResultListener<ResponseBody> iServiceResultListener) {
+
+        getRetrofitUserService().deleteTimeModule(token, userId, moduleId).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                ServiceResult<ResponseBody> result = new ServiceResult<>();
+
+                if (response.isSuccessful()) {
+                    result.setData(response.body());
+                } else {
+                    result.setErrorMsg("Erreur : Suppression module");
+                }
+
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(result);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(new ServiceResult<ResponseBody>(t.getMessage()));
+                }
+            }
+        });
+
+    }
 }

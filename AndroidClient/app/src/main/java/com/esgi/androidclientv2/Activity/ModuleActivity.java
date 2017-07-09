@@ -38,7 +38,7 @@ public class ModuleActivity extends Activity {
     private RetrofitUserService retrofitUserService;
     private TokenResponse tokenResponse;
     private User user;
-    private final static String tmpToken = "TK3CnQfTJTm4sgMwap88epEHMz9y6laUgZctsea+jA/WOyYB9UQuo6+rB0Q/Z0EXa0k=";
+    private final static String tmpToken = "nz1GlBTPs0cWKJuyjRNS0EByGiHcAkcEg0kv5olvbn9J9Tf++0IxpwYoy0A+rrDhdX4=";
     private final static int tmpUserId = 10;
 
     private ImageButton ibTopLeft, ibTopCenter, ibTopRight,
@@ -50,6 +50,7 @@ public class ModuleActivity extends Activity {
     List<Module> moduleList;
 
     private int positionActuel = -1;
+    private int idModuleActuel = -1;
 
     private Drawable timeIconDrawable, weatherIconDrawable, addIconDrawable,
             attentionIconDrawable;
@@ -132,9 +133,10 @@ public class ModuleActivity extends Activity {
             @Override
             public void onResult(ServiceResult<User> result) {
 
-                moduleList = result.getData().getModules();
+                User user = result.getData();
 
-                if (moduleList != null) {
+                if (user != null) {
+                    moduleList = user.getModules();
                     setModule(moduleList);
                     Toast.makeText(getBaseContext(), "Initialisation terminé", Toast.LENGTH_SHORT).show();
                 } else {
@@ -219,6 +221,7 @@ public class ModuleActivity extends Activity {
 
         if (module != null) {
             Log.i("ModuleActivity", "Dialog update/delete");
+            idModuleActuel = module.getId(); //save module id to use with delete/update
         } else {
             Log.i("ModuleActivity", "Dialog add");
             showAddModuleDialog();
@@ -227,9 +230,8 @@ public class ModuleActivity extends Activity {
 
     private void showAddModuleDialog() {
 
-
         final AlertDialog.Builder builder = new AlertDialog.Builder(ModuleActivity.this);
-        final View mView = getLayoutInflater().inflate(R.layout.dialog_add_edit_moules, null);
+        final View mView = getLayoutInflater().inflate(R.layout.dialog_add_edit_module, null);
 
         //init views
         final RadioButton rbTime = (RadioButton) mView.findViewById(R.id.module_radio_button_time);
@@ -338,6 +340,12 @@ public class ModuleActivity extends Activity {
 
                     }
                 });
+    }
+
+    private void deleteTimeModule() {
+
+        //getRetrofitUserService().deleteTimeModule(tmpToken,tmpUserId,);
+
     }
 
     private void setFakeModules() {

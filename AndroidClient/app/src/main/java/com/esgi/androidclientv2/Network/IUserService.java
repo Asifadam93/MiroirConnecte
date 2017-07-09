@@ -25,4 +25,6 @@ public interface IUserService {
 
     void addTimeModule(String token, int userId, Map<String, String> timeModuleMap, IServiceResultListener<ResponseBody> iServiceResultListener);
 
+    void deleteTimeModule(String token, int userId, int moduleId, IServiceResultListener<ResponseBody> iServiceResultListener);
+
 }

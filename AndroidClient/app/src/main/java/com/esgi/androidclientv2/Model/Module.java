@@ -32,8 +32,6 @@ public class Module implements Parcelable {
     @SerializedName("country")
     private String countryCode;
 
-    private int postionModule = 0;
-
     public Integer getId() {
         return id;
     }
@@ -60,14 +58,6 @@ public class Module implements Parcelable {
 
     public String getCountryCode() {
         return countryCode;
-    }
-
-    public int getPostionModule() {
-        return postionModule;
-    }
-
-    public void setPostionModule(int postionModule) {
-        this.postionModule = postionModule;
     }
 
     @Override

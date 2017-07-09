@@ -52,4 +52,11 @@ public interface IRetrofitUserService {
             @Path("id") int id,
             @Body Map<String, String> timeModuleMap
     );
+
+    @DELETE("/user/{id}/time/{moduleId}")
+    Call<ResponseBody> deleteTimeModule(
+            @Header("X-Auth-Token") String userToken,
+            @Path("id") int id,
+            @Path("moduleId") int moduleId
+    );
 }
