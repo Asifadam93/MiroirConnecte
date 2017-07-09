@@ -25,6 +25,14 @@ public interface IUserService {
 
     void addTimeModule(String token, int userId, Map<String, String> timeModuleMap, IServiceResultListener<ResponseBody> iServiceResultListener);
 
-    void deleteTimeModule(String token, int userId, int moduleId, IServiceResultListener<ResponseBody> iServiceResultListener);
+    void updateTimeModule(String token, int userId, int moduleId, Map<String,String> timeModuleMap, IServiceResultListener<ResponseBody> iServiceResultListener);
+
+    void deleteTimeModule(String token, int userId, int moduleId, IServiceResultListener<Integer> iServiceResultListener);
+
+    void addWeatherModule(String token, int userId, Map<String, String> timeModuleMap, IServiceResultListener<ResponseBody> iServiceResultListener);
+
+    void updateWeatherModule(String token, int userId, int moduleId, Map<String,String> weatherModuleMap, IServiceResultListener<ResponseBody> iServiceResultListener);
+
+    void deleteWeatherModule(String token, int userId, int moduleId, IServiceResultListener<Integer> iServiceResultListener);
 
 }

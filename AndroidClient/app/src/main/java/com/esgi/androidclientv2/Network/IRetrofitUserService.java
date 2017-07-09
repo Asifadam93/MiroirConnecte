@@ -53,8 +53,38 @@ public interface IRetrofitUserService {
             @Body Map<String, String> timeModuleMap
     );
 
+    @PATCH("/user/{id}/time/{moduleId}")
+    Call<ResponseBody> updateTimeModule(
+            @Header("X-Auth-Token") String userToken,
+            @Path("id") int id,
+            @Path("moduleId") int moduleId,
+            @Body Map<String, String> timeModuleMap
+    );
+
     @DELETE("/user/{id}/time/{moduleId}")
     Call<ResponseBody> deleteTimeModule(
+            @Header("X-Auth-Token") String userToken,
+            @Path("id") int id,
+            @Path("moduleId") int moduleId
+    );
+
+    @POST("/user/{id}/weather")
+    Call<ResponseBody> addWeatherModule(
+            @Header("X-Auth-Token") String userToken,
+            @Path("id") int id,
+            @Body Map<String, String> weatherModuleMap
+    );
+
+    @PATCH("/user/{id}/weather/{moduleId}")
+    Call<ResponseBody> updateWeatherModule(
+            @Header("X-Auth-Token") String userToken,
+            @Path("id") int id,
+            @Path("moduleId") int moduleId,
+            @Body Map<String, String> weatherModuleMap
+    );
+
+    @DELETE("/user/{id}/weather/{moduleId}")
+    Call<ResponseBody> deleteWeatherModule(
             @Header("X-Auth-Token") String userToken,
             @Path("id") int id,
             @Path("moduleId") int moduleId

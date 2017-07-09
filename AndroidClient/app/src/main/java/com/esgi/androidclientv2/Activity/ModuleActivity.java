@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esgi.androidclientv2.Model.Module;
@@ -22,7 +24,6 @@ import com.esgi.androidclientv2.Network.RetrofitUserService;
 import com.esgi.androidclientv2.Network.ServiceResult;
 import com.esgi.androidclientv2.R;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class ModuleActivity extends Activity {
     private RetrofitUserService retrofitUserService;
     private TokenResponse tokenResponse;
     private User user;
-    private final static String tmpToken = "nz1GlBTPs0cWKJuyjRNS0EByGiHcAkcEg0kv5olvbn9J9Tf++0IxpwYoy0A+rrDhdX4=";
+    private final static String tmpToken = "Pg4kPuM8X80Davn+yMdNnAi5kxCQZxmpdsw4f98DkPfFGZatrUw5mqamhGiK9dHXNuY=";
     private final static int tmpUserId = 10;
 
     private ImageButton ibTopLeft, ibTopCenter, ibTopRight,
@@ -65,17 +66,6 @@ public class ModuleActivity extends Activity {
         addIconDrawable = getDrawable(R.drawable.icons_add_50);
         attentionIconDrawable = getDrawable(R.drawable.icons_attention_50);
 
-        /*ibTopLeft = (ImageButton) findViewById(R.id.imageButton_top_left);
-        ibTopCenter = (ImageButton) findViewById(R.id.imageButton_top_center);
-        ibTopRight = (ImageButton) findViewById(R.id.imageButton_top_right);
-        ibLeft = (ImageButton) findViewById(R.id.imageButton_left);
-        ibCenter = (ImageButton) findViewById(R.id.imageButton_center);
-        ibRight = (ImageButton) findViewById(R.id.imageButton_right);
-        ibBottomLeft = (ImageButton) findViewById(R.id.imageButton_bottom_left);
-        ibBottomCenter = (ImageButton) findViewById(R.id.imageButton_bottom_center);
-        ibBottomRight = (ImageButton) findViewById(R.id.imageButton_bottom_right);*/
-
-
         imageButtons[0] = (ImageButton) findViewById(R.id.imageButton_top_left);
         imageButtons[1] = (ImageButton) findViewById(R.id.imageButton_top_center);
         imageButtons[2] = (ImageButton) findViewById(R.id.imageButton_top_right);
@@ -86,7 +76,6 @@ public class ModuleActivity extends Activity {
         imageButtons[7] = (ImageButton) findViewById(R.id.imageButton_bottom_center);
         imageButtons[8] = (ImageButton) findViewById(R.id.imageButton_bottom_right);
 
-        //setFakeModules();
         getUserModules();
 
         // set click listener to image buttons
@@ -102,7 +91,6 @@ public class ModuleActivity extends Activity {
             });
         }
 
-
         /*// get user token model from loginFragment
         Intent intent = getIntent();
         if (intent != null) {
@@ -113,18 +101,6 @@ public class ModuleActivity extends Activity {
             Log.i("UserActivity", "Error data transmission");
             return;
         }*/
-
-        //
-
-        //setFakeModules();
-        //setModule(moduleList);
-
-        /*ibTopLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });*/
     }
 
     private void getUserModules() {
@@ -137,6 +113,7 @@ public class ModuleActivity extends Activity {
 
                 if (user != null) {
                     moduleList = user.getModules();
+                    initModules();
                     setModule(moduleList);
                     Toast.makeText(getBaseContext(), "Initialisation terminé", Toast.LENGTH_SHORT).show();
                 } else {
@@ -144,6 +121,13 @@ public class ModuleActivity extends Activity {
                 }
             }
         });
+    }
+
+    private void initModules() {
+        for (ImageButton ib : imageButtons) {
+            ib.setBackground(addIconDrawable);
+            ib.setTag(null);
+        }
     }
 
     private void setModule(List<Module> moduleList) {
@@ -222,10 +206,135 @@ public class ModuleActivity extends Activity {
         if (module != null) {
             Log.i("ModuleActivity", "Dialog update/delete");
             idModuleActuel = module.getId(); //save module id to use with delete/update
+            showEditModuleDialog(module, ib);
         } else {
             Log.i("ModuleActivity", "Dialog add");
             showAddModuleDialog();
         }
+    }
+
+    private void showEditModuleDialog(final Module module, final ImageButton ib) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(ModuleActivity.this);
+        View mView = getLayoutInflater().inflate(R.layout.dialog_add_edit_module, null);
+
+        // show welcome msg
+        TextView twTitle = (TextView) mView.findViewById(R.id.module_titre);
+        String titleText = "Éditer le module " + getModuleTranslatedName(module);
+        twTitle.setText(titleText);
+
+        //disable checkboxes
+        RadioGroup radioGroup = (RadioGroup) mView.findViewById(R.id.radioGroupe);
+        radioGroup.setVisibility(View.GONE);
+
+        // show delete button
+        Button buttonDelete = (Button) mView.findViewById(R.id.module_button_delete);
+        buttonDelete.setVisibility(View.VISIBLE);
+
+        Button buttonUpdate = (Button) mView.findViewById(R.id.module_button_save);
+
+        LinearLayout lLayoutWeather = (LinearLayout) mView.findViewById(R.id.linearLayoutWeather);
+
+        // time entry
+        final EditText etDesc = (EditText) mView.findViewById(R.id.module_description);
+        final EditText etTimeZone = (EditText) mView.findViewById(R.id.module_time_zone);
+
+        // weather entry
+        final EditText etCity = (EditText) mView.findViewById(R.id.module_city);
+        final EditText etCountry = (EditText) mView.findViewById(R.id.module_country);
+
+        builder.setView(mView);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // set module default values to update or delete
+        switch (module.getType()) {
+
+            case timeModule:
+
+                etTimeZone.setVisibility(View.VISIBLE);
+                lLayoutWeather.setVisibility(View.GONE);
+
+                //set values
+                etDesc.setText(module.getName());
+                etTimeZone.setText(module.getTimeZone());
+                break;
+
+            case weatherModule:
+
+                etTimeZone.setVisibility(View.GONE);
+                lLayoutWeather.setVisibility(View.VISIBLE);
+
+                //set values
+                etDesc.setText(module.getName());
+                etCity.setText(module.getCityName());
+                etCountry.setText(module.getCountryCode());
+                break;
+        }
+
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                switch (module.getType()) {
+
+                    case timeModule:
+
+                        Map<String, String> timeMap = new ArrayMap<String, String>();
+
+                        timeMap.put("name", etDesc.getText().toString());
+                        timeMap.put("position", getPosition());
+                        timeMap.put("timeZone", etTimeZone.getText().toString());
+
+                        updateTimeModule(timeMap);
+                        break;
+
+                    case weatherModule:
+
+                        Map<String, String> weatherMap = new ArrayMap<String, String>();
+
+                        weatherMap.put("name", etDesc.getText().toString());
+                        weatherMap.put("position", getPosition());
+                        weatherMap.put("city", etCity.getText().toString());
+                        weatherMap.put("country", etCountry.getText().toString());
+
+                        updateWeatherModule(weatherMap);
+                        break;
+                }
+                dialog.cancel();
+            }
+        });
+
+        buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                switch (module.getType()) {
+
+                    case timeModule:
+                        deleteTimeModule();
+                        break;
+
+                    case weatherModule:
+                        deleteWeatherModule();
+                        break;
+                }
+                dialog.cancel();
+            }
+        });
+
+
+    }
+
+    private String getModuleTranslatedName(Module module) {
+        switch (module.getType()) {
+            case timeModule:
+                return "horaire";
+
+            case weatherModule:
+                return "météo";
+        }
+        return "";
     }
 
     private void showAddModuleDialog() {
@@ -266,10 +375,11 @@ public class ModuleActivity extends Activity {
             @Override
             public void onClick(View view) {
 
+                EditText etDesc = (EditText) mView.findViewById(R.id.module_description);
+
                 // add time module
                 if (rbTime.isChecked()) {
 
-                    EditText etDesc = (EditText) mView.findViewById(R.id.module_description);
                     EditText etTimeZone = (EditText) mView.findViewById(R.id.module_time_zone);
 
                     Map<String, String> timeMap = new ArrayMap<String, String>();
@@ -282,7 +392,17 @@ public class ModuleActivity extends Activity {
 
                 } else if (rbWeather.isChecked()) {
                     // add weather module
+                    EditText etCity = (EditText) mView.findViewById(R.id.module_city);
+                    EditText etCountry = (EditText) mView.findViewById(R.id.module_country);
 
+                    Map<String, String> weatherMap = new ArrayMap<String, String>();
+
+                    weatherMap.put("name", etDesc.getText().toString());
+                    weatherMap.put("position", getPosition());
+                    weatherMap.put("city", etCity.getText().toString());
+                    weatherMap.put("country", etCountry.getText().toString());
+
+                    addWeatherModule(weatherMap);
                 }
 
                 dialog.cancel();
@@ -332,7 +452,7 @@ public class ModuleActivity extends Activity {
                     public void onResult(ServiceResult<ResponseBody> result) {
 
                         if (result.getData() != null) {
-                            Toast.makeText(getBaseContext(), "Module à été bien sauvgardé", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), "Module a été bien sauvgardé", Toast.LENGTH_SHORT).show();
                             getUserModules();
                         } else {
                             Toast.makeText(getBaseContext(), result.getErrorMsg(), Toast.LENGTH_SHORT).show();
@@ -342,17 +462,89 @@ public class ModuleActivity extends Activity {
                 });
     }
 
-    private void deleteTimeModule() {
+    private void addWeatherModule(Map<String, String> weatherMap) {
 
-        //getRetrofitUserService().deleteTimeModule(tmpToken,tmpUserId,);
+        getRetrofitUserService().addWeatherModule(tmpToken, tmpUserId, weatherMap, new IServiceResultListener<ResponseBody>() {
+            @Override
+            public void onResult(ServiceResult<ResponseBody> result) {
+
+                if (result.getData() != null) {
+                    Toast.makeText(getBaseContext(), "Module a été bien sauvgardé", Toast.LENGTH_SHORT).show();
+                    getUserModules();
+                } else {
+                    Toast.makeText(getBaseContext(), result.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+
+    private void updateTimeModule(Map<String, String> timeMap) {
+
+        getRetrofitUserService().updateTimeModule(tmpToken, tmpUserId, idModuleActuel, timeMap,
+                new IServiceResultListener<ResponseBody>() {
+                    @Override
+                    public void onResult(ServiceResult<ResponseBody> result) {
+                        if (result.getData() != null) {
+                            Toast.makeText(getBaseContext(), "Module a été bien actualisé", Toast.LENGTH_SHORT).show();
+                            getUserModules();
+                        } else {
+                            Toast.makeText(getBaseContext(), result.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
     }
 
-    private void setFakeModules() {
-        moduleList = new ArrayList<>();
-        moduleList.add(new Module(4, "weather", "Météo à paris", topLeft, null, "Paris", "fr"));
-        moduleList.add(new Module(5, "time", "Heure en inde", center, "India/Chennai", null, null));
-        moduleList.add(new Module(5, "time", "Heure en inde", bottomRight, "India/Chennai", null, null));
+    private void updateWeatherModule(Map<String, String> weatherMap) {
+
+        getRetrofitUserService().updateWeatherModule(tmpToken, tmpUserId, idModuleActuel, weatherMap,
+                new IServiceResultListener<ResponseBody>() {
+                    @Override
+                    public void onResult(ServiceResult<ResponseBody> result) {
+                        if (result.getData() != null) {
+                            Toast.makeText(getBaseContext(), "Module a été bien actualisé", Toast.LENGTH_SHORT).show();
+                            getUserModules();
+                        } else {
+                            Toast.makeText(getBaseContext(), result.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+    }
+
+    private void deleteTimeModule() {
+
+        getRetrofitUserService().deleteTimeModule(tmpToken, tmpUserId, idModuleActuel, new IServiceResultListener<Integer>() {
+
+            @Override
+            public void onResult(ServiceResult<Integer> result) {
+
+                if (result.getData() != null) {
+                    Toast.makeText(getBaseContext(), "Module a été bien supprimé", Toast.LENGTH_SHORT).show();
+                    getUserModules();
+                } else {
+                    Toast.makeText(getBaseContext(), result.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void deleteWeatherModule() {
+
+        getRetrofitUserService().deleteWeatherModule(tmpToken, tmpUserId, idModuleActuel, new IServiceResultListener<Integer>() {
+            @Override
+            public void onResult(ServiceResult<Integer> result) {
+
+                if (result.getData() != null) {
+                    Toast.makeText(getBaseContext(), "Module a été bien supprimé", Toast.LENGTH_SHORT).show();
+                    getUserModules();
+                } else {
+                    Toast.makeText(getBaseContext(), result.getErrorMsg(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     public RetrofitUserService getRetrofitUserService() {

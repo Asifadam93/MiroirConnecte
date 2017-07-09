@@ -124,7 +124,6 @@
                 android:background="@android:color/transparent"
                 android:drawablePadding="8dp"
                 android:drawableStart="@drawable/icons_france_30"
-                android:focusable="false"
                 android:gravity="center_vertical"
                 android:hint="Code pays (Ex : fr pour France)"
                 android:inputType="text"

@@ -226,7 +226,7 @@ public class RetrofitUserService implements IUserService {
                         if (response.isSuccessful()) {
                             result.setData(response.body());
                         } else {
-                            result.setErrorMsg("Erreur : Ajout module");
+                            result.setErrorMsg("Erreur : Ajout module horaire");
                         }
 
                         if (iServiceResultListener != null) {
@@ -246,16 +246,49 @@ public class RetrofitUserService implements IUserService {
     }
 
     @Override
-    public void deleteTimeModule(String token, int userId, int moduleId, final IServiceResultListener<ResponseBody> iServiceResultListener) {
+    public void updateTimeModule(String token, int userId, int moduleId, Map<String, String> timeModuleMap,
+                                 final IServiceResultListener<ResponseBody> iServiceResultListener) {
+
+        getRetrofitUserService().updateTimeModule(token, userId, moduleId, timeModuleMap)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        ServiceResult<ResponseBody> result = new ServiceResult<>();
+
+                        if (response.isSuccessful()) {
+                            result.setData(response.body());
+                        } else {
+                            result.setErrorMsg("Erreur : editer module horaire");
+                        }
+
+                        if (iServiceResultListener != null) {
+                            iServiceResultListener.onResult(result);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        if (iServiceResultListener != null) {
+                            iServiceResultListener.onResult(new ServiceResult<ResponseBody>(t.getMessage()));
+                        }
+                    }
+                });
+
+    }
+
+    @Override
+    public void deleteTimeModule(String token, int userId, int moduleId,
+                                 final IServiceResultListener<Integer> iServiceResultListener) {
 
         getRetrofitUserService().deleteTimeModule(token, userId, moduleId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
-                ServiceResult<ResponseBody> result = new ServiceResult<>();
+                ServiceResult<Integer> result = new ServiceResult<>();
 
                 if (response.isSuccessful()) {
-                    result.setData(response.body());
+                    result.setData(response.code());
                 } else {
                     result.setErrorMsg("Erreur : Suppression module");
                 }
@@ -263,13 +296,105 @@ public class RetrofitUserService implements IUserService {
                 if (iServiceResultListener != null) {
                     iServiceResultListener.onResult(result);
                 }
-
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 if (iServiceResultListener != null) {
-                    iServiceResultListener.onResult(new ServiceResult<ResponseBody>(t.getMessage()));
+                    iServiceResultListener.onResult(new ServiceResult<Integer>(t.getMessage()));
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void addWeatherModule(String token, int userId, Map<String, String> weatherModuleMap,
+                                 final IServiceResultListener<ResponseBody> iServiceResultListener) {
+
+        getRetrofitUserService().addWeatherModule(token, userId, weatherModuleMap)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        ServiceResult<ResponseBody> result = new ServiceResult<>();
+
+                        if (response.isSuccessful()) {
+                            result.setData(response.body());
+                        } else {
+                            result.setErrorMsg("Erreur : Ajout module météo");
+                        }
+
+                        if (iServiceResultListener != null) {
+                            iServiceResultListener.onResult(result);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        if (iServiceResultListener != null) {
+                            iServiceResultListener.onResult(new ServiceResult<ResponseBody>(t.getMessage()));
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void updateWeatherModule(String token, int userId, int moduleId, Map<String, String> weatherModuleMap,
+                                    final IServiceResultListener<ResponseBody> iServiceResultListener) {
+
+        getRetrofitUserService().updateWeatherModule(token, userId, moduleId, weatherModuleMap)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        ServiceResult<ResponseBody> result = new ServiceResult<>();
+
+                        if (response.isSuccessful()) {
+                            result.setData(response.body());
+                        } else {
+                            result.setErrorMsg("Erreur : editer module météo");
+                        }
+
+                        if (iServiceResultListener != null) {
+                            iServiceResultListener.onResult(result);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        if (iServiceResultListener != null) {
+                            iServiceResultListener.onResult(new ServiceResult<ResponseBody>(t.getMessage()));
+                        }
+                    }
+                });
+
+    }
+
+    @Override
+    public void deleteWeatherModule(String token, int userId, int moduleId, final IServiceResultListener<Integer> iServiceResultListener) {
+
+        getRetrofitUserService().deleteWeatherModule(token, userId, moduleId).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                ServiceResult<Integer> result = new ServiceResult<>();
+
+                if (response.isSuccessful()) {
+                    result.setData(response.code());
+                } else {
+                    result.setErrorMsg("Erreur : Suppression module");
+                }
+
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(result);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if (iServiceResultListener != null) {
+                    iServiceResultListener.onResult(new ServiceResult<Integer>(t.getMessage()));
                 }
             }
         });
