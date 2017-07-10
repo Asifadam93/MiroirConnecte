@@ -13,3 +13,4 @@ def take_picture():
     camera.capture("img/tempo_photo/photo.jpg")
     camera.stop_preview()
     return ("img/tempo_photo/photo.jpg")
+

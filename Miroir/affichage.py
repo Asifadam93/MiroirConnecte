@@ -175,3 +175,9 @@ def add_widget_time(position_label, libelle, module_timezone):
     return widget_heure
 
 
+def clear_mirror():
+    global cellules
+    for index, cellule in enumerate(cellules):
+        if index != 4:
+            for widget in cellule.winfo_children():
+                widget.destroy()
