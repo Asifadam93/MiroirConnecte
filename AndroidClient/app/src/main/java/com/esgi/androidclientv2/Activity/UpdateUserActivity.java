@@ -53,7 +53,7 @@ public class UpdateUserActivity extends Activity {
         editTextNom.setText(user.getLastName());
         editTextPrenom.setText(user.getFirstName());
         editTextEmail.setText(user.getEmail());
-        editTextPhotoCode.setText(user.getPhotoName());
+        //editTextPhotoCode.setText(user.getPhotoName());
 
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,32 +71,34 @@ public class UpdateUserActivity extends Activity {
         String email = editTextEmail.getText().toString();
         String photoCode = editTextPhotoCode.getText().toString();
 
+        HashMap<String, String> updateMap = new HashMap<>();
+
         // empty field verification
         if (nom.isEmpty()) {
             editTextNom.setError(getString(R.string.champ_vide));
             return;
         }
+        updateMap.put("last_name", nom);
+
 
         if (prenom.isEmpty()) {
             editTextPrenom.setError(getString(R.string.champ_vide));
             return;
         }
 
+        updateMap.put("first_name", prenom);
+
         if (email.isEmpty()) {
             editTextEmail.setError(getString(R.string.champ_vide));
             return;
         }
 
-        if (photoCode.isEmpty()) {
-            editTextPhotoCode.setError(getString(R.string.champ_vide));
-            return;
+        updateMap.put("email", email);
+
+        if (!photoCode.isEmpty()) {
+            updateMap.put("photo_name", photoCode);
         }
 
-        HashMap<String, String> updateMap = new HashMap<>();
-        updateMap.put("first_name", prenom);
-        updateMap.put("last_name", nom);
-        updateMap.put("email", email);
-        updateMap.put("photo_name", photoCode);
 
         updateUser(updateMap);
     }
