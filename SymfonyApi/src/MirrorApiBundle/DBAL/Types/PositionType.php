@@ -10,8 +10,10 @@ class PositionType extends Type
     const ENUM_POSITION         = 'enum_position';
     const POSITION_TOP_LEFT     = 'top_left';
     const POSITION_TOP_RIGHT    = 'top_right';
+    const POSITION_TOP          = 'top';
     const POSITION_BOTTOM_LEFT  = 'bottom_left';
     const POSITION_BOTTOM_RIGHT = 'bottom_right';
+    const POSITION_BOTTOM       = 'bottom';
     const POSITION_LEFT         = 'left';
     const POSITION_RIGHT        = 'right';
 
@@ -20,8 +22,10 @@ class PositionType extends Type
         return "ENUM('".PositionType::POSITION_BOTTOM_LEFT."', ".
             "'".self::POSITION_TOP_LEFT."', ".
             "'".self::POSITION_TOP_RIGHT."', ".
+            "'".self::POSITION_TOP."', ".
             "'".self::POSITION_BOTTOM_LEFT."', ".
             "'".self::POSITION_BOTTOM_RIGHT."', ".
+            "'".self::POSITION_BOTTOM."', ".
             "'".self::POSITION_LEFT."', ".
             "'".self::POSITION_RIGHT."')";
     }
@@ -35,8 +39,10 @@ class PositionType extends Type
     {
         if (!in_array($value, array(self::POSITION_TOP_LEFT,
                                     self::POSITION_TOP_RIGHT,
+                                    self::POSITION_TOP,
                                     self::POSITION_BOTTOM_LEFT,
                                     self::POSITION_BOTTOM_RIGHT,
+                                    self::POSITION_BOTTOM,
                                     self::POSITION_LEFT,
                                     self::POSITION_RIGHT ))) {
             throw new \InvalidArgumentException("Invalid POSITION");
