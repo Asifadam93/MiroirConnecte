@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -233,7 +235,12 @@ public class ModuleActivity extends Activity {
 
         // time entry
         final EditText etDesc = (EditText) mView.findViewById(R.id.module_description);
-        final EditText etTimeZone = (EditText) mView.findViewById(R.id.module_time_zone);
+        final AutoCompleteTextView etTimeZone = (AutoCompleteTextView) mView.findViewById(R.id.module_time_zone);
+
+        // auto complete textview
+        String[] timeZone = getResources().getStringArray(R.array.time_zone);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,timeZone);
+        etTimeZone.setAdapter(arrayAdapter);
 
         // weather entry
         final EditText etCity = (EditText) mView.findViewById(R.id.module_city);
@@ -373,8 +380,13 @@ public class ModuleActivity extends Activity {
         final RadioButton rbWeather = (RadioButton) mView.findViewById(R.id.module_radio_button_weather);
 
         final LinearLayout lLayoutWeather = (LinearLayout) mView.findViewById(R.id.linearLayoutWeather);
-        final EditText etTimeZone = (EditText) mView.findViewById(R.id.module_time_zone);
+        final AutoCompleteTextView etTimeZone = (AutoCompleteTextView) mView.findViewById(R.id.module_time_zone);
         Button buttonSave = (Button) mView.findViewById(R.id.module_button_save);
+
+        String[] timeZone = getResources().getStringArray(R.array.time_zone);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,timeZone);
+        etTimeZone.setAdapter(arrayAdapter);
+
 
         builder.setView(mView);
         final AlertDialog dialog = builder.create();

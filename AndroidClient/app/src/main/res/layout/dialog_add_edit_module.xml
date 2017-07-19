@@ -67,7 +67,7 @@
             android:layout_height="1px"
             android:background="@color/white_greyish" />
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/module_time_zone"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
